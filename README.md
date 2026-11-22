@@ -79,6 +79,10 @@ rogue-peer billing-agent      accepted wrong total, refunded   FAIL  (no cross-c
 4. Poisoned-output and rogue-peer experiments
 5. GitHub Action and trends
 
+## Built on switchyard
+
+`agentchaos` will be a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → fuse → intentlock → taintline → rewind → MCP server`).
+
 ## Related OpenAstra projects
 
 - OpenQA (in the lab): adversarial test suites for agents; AgentChaos covers failures rather than attacks
