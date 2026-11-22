@@ -269,7 +269,7 @@ AgentChaos's Go code lives in this repo as `github.com/sadayamuthu/agentchaos`.
 The GitHub repo `sadayamuthu/switchyard` now exists and is **private** (user's
 choice), so fetching the module outside `go.work` needs
 `GOPRIVATE=github.com/sadayamuthu/switchyard`, and CI in consumer repos needs
-a token. The licence, making it public and the Homebrew release are a later
+a token. Making it public and the Homebrew release (licence: Apache 2.0) are a later
 step that needs the user. Consumers: agentchaos, intentlock, taintline, fuse,
 rewind, airlock (READMEs updated); each adds the Go dependency when it gets
 code.
@@ -295,5 +295,4 @@ code.
 ## Open, needs the user later (not blocking v0)
 
 - Making `switchyard` public (needed before public READMEs' links work for readers).
-- Licence (all READMEs say "to be decided before the first release").
 - Python/TS framework wrappers vs proxy-only, when Taintline/Rewind start.

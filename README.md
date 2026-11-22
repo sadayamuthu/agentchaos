@@ -1,4 +1,22 @@
-# agentchaos
+<div align="center">
+
+# AgentChaos
+
+<h3>Chaos engineering for AI agents</h3>
+
+[![Status](https://img.shields.io/badge/status-design%20stage-orange?style=flat-square)](ROADMAP.md)
+[![Go 1.26+](https://img.shields.io/badge/go-1.26+-00ADD8?style=flat-square)](https://go.dev/dl/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square)](LICENSE)
+
+---
+
+[How it works](#how-it-works) · [Thesis](THESIS.md) · [Roadmap](ROADMAP.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+
+</div>
+
+---
+
+## What is AgentChaos?
 
 Chaos engineering for AI agents. `agentchaos` deliberately breaks the world
 around an agent (tool timeouts, malformed responses, partial failures,
@@ -11,6 +29,8 @@ passing the failure on to other agents.
 > the [OpenAstra](https://openastra.org) research agenda, area X: AI
 > Resilience & Recovery.
 
+---
+
 ## The problem
 
 Agents are tested on the happy path: the tools work, the data is clean, and
@@ -19,6 +39,8 @@ return an error message the model reads as an instruction. How an agent
 behaves when things break matters as much as how it behaves when they don't,
 and almost nobody tests it. Chaos engineering made this routine for
 distributed systems; agents need the same discipline.
+
+---
 
 ## How it works
 
@@ -36,6 +58,8 @@ distributed systems; agents need the same discipline.
 4. **Grade.** Score each experiment against the expected safe behaviour and
    produce a resilience report.
 
+---
+
 ## Example (proposed)
 
 ```console
@@ -50,12 +74,16 @@ rogue-peer billing-agent      accepted wrong total, refunded   FAIL  (no cross-c
 1 of 5 passed. Report: reports/support-agent-2026-11-16.html
 ```
 
+---
+
 ## Planned surfaces
 
 - Fault-injecting MCP and HTTP proxy
 - Experiment files in YAML, plus a built-in library of common faults
 - CLI and a GitHub Action, so resilience is checked on every change
 - HTML and JSON reports; scores over time
+
+---
 
 ## Maps to
 
@@ -65,23 +93,27 @@ rogue-peer billing-agent      accepted wrong total, refunded   FAIL  (no cross-c
 | OWASP LLM Top 10 (2025) | LLM09 Misinformation, LLM10 Unbounded Consumption |
 | NIST SP 800-53 Rev. 5 | CA-8 Penetration Testing, CP-4 Contingency Plan Testing, SA-11 Developer Testing and Evaluation |
 
+---
+
 ## Design principles
 
 - **Test against real tools, with faults on top**, not against mocks.
 - **Grade behaviour, not output text.** What the agent *did* next is what matters.
 - **Safe by default.** Experiments that could cause real side effects run in [Airlock](https://github.com/sadayamuthu/airlock) or against staging.
 
+---
+
 ## Roadmap
 
-1. Fault proxy and experiment format
-2. Core fault library (timeout, error, partial, malformed)
-3. Behaviour classifier and reports
-4. Poisoned-output and rogue-peer experiments
-5. GitHub Action and trends
+The plan, from the first working version to 1.0, is in [ROADMAP.md](ROADMAP.md). The reasoning behind the project, and what would make us stop, is in [THESIS.md](THESIS.md).
+
+---
 
 ## Built on switchyard
 
 `agentchaos` will be a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → fuse → intentlock → taintline → rewind → MCP server`).
+
+---
 
 ## Related OpenAstra projects
 
@@ -89,6 +121,32 @@ rogue-peer billing-agent      accepted wrong total, refunded   FAIL  (no cross-c
 - [Fuse](https://github.com/sadayamuthu/fuse): AgentChaos checks the breakers trip
 - [Rewind](https://github.com/sadayamuthu/rewind): undo for experiments run against real systems
 
+---
+
+## Contributing
+
+Design feedback, real-world cases and fixes are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help while the project is at the design stage, and [GOVERNANCE.md](GOVERNANCE.md) for how decisions are made.
+
+---
+
+## Security
+
+Please report vulnerabilities privately through [GitHub security advisories](https://github.com/sadayamuthu/agentchaos/security/advisories/new), not in a public issue. See [SECURITY.md](SECURITY.md) for what to include and what's in scope.
+
+---
+
 ## License
 
-To be decided before the first release.
+[Apache License 2.0](LICENSE)
+
+---
+
+<div align="center">
+
+**AgentChaos: chaos engineering for AI agents**
+
+AgentChaos is managed by [OpenAstra](https://openastra.org)
+
+[GitHub](https://github.com/sadayamuthu/agentchaos) · [Thesis](THESIS.md) · [Roadmap](ROADMAP.md)
+
+</div>

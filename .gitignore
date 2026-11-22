@@ -1,0 +1,22 @@
+# Binaries and build output
+/agentchaos
+/dist/
+/bin/
+*.exe
+*.test
+*.out
+coverage.*
+
+# Go workspace (local development against unreleased modules)
+go.work
+go.work.sum
+
+# Tool output
+agentchaos-out/
+
+# Local environment
+.env
+.envrc
+.DS_Store
+.idea/
+.vscode/
