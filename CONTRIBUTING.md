@@ -51,13 +51,7 @@ go build ./...
 ```
 
 AgentChaos is built on [switchyard](https://github.com/sadayamuthu/switchyard),
-which is private while it is being built. Until it is public, develop with
-both repos checked out side by side and a `go.work` file in their parent
-directory:
-
-```sh
-go work init ./switchyard ./agentchaos
-```
+fetched as a normal Go module dependency (`go get` resolves it).
 
 Before pushing, run what CI will run:
 

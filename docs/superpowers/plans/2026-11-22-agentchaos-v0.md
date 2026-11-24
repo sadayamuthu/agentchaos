@@ -6,16 +6,17 @@
 
 **Architecture:** `agentchaos proxy` is a switchyard proxy with one fault hook, wrapping one upstream MCP server. `agentchaos run` generates an MCP config that wraps every server in `agentchaos proxy`, runs the agent command per experiment × run with a wall-clock limit, merges the per-server JSONL traces, grades them deterministically and prints a table plus a JSON report.
 
-**Tech Stack:** Go 1.26, `github.com/sadayamuthu/switchyard` (local via `go.work`), `go.yaml.in/yaml/v3` v3.0.6, `github.com/modelcontextprotocol/go-sdk` v1.8.0 (example servers, fake agent, tests).
+**Tech Stack:** Go 1.26, `github.com/sadayamuthu/switchyard` v0.1.0 (published; fetched through proxy.golang.org), `go.yaml.in/yaml/v3` v3.0.6, `github.com/modelcontextprotocol/go-sdk` v1.8.0 (example servers, fake agent, tests).
 
 **Spec:** `docs/superpowers/specs/2026-11-22-switchyard-agentchaos-v0-design.md`
 
-**Prerequisite:** switchyard plan (`~/git-openastra/switchyard/docs/superpowers/plans/2026-11-22-switchyard-v0.md`) complete. This plan uses its `Hook`, `Base`, `Decision` constructors and `Annotate`, `Session.Update`, `Response.ToolResult`, `ToolResult.Marshal`, `Event`, `NewJSONLSink`, `ChainIDFromEnv`, `RunCommand`, and `testkit`.
+**Prerequisite:** switchyard v0.1.0 is published (done 2026-11-24). This plan uses its `Hook`, `Base`, `Decision` constructors and `Annotate`, `Request.Seq`, `Request.ToolCall()` → `ToolCall{Name, Arguments, Seq}`, `Session.Get/Set/Update`, `Response.ToolResult`, `ToolResult.Marshal`, `Event`, `NewJSONLSink`, `ChainIDFromEnv`, `RunCommand`, and `testkit`. Read them with `go doc github.com/sadayamuthu/switchyard` after `go get`.
 
 ## Global Constraints
 
 - Module `github.com/sadayamuthu/agentchaos`; `go 1.26`.
-- `~/git-openastra/go.work` with `use ./switchyard ./agentchaos` (that directory is not a repo; the file is not committed anywhere). `agentchaos/go.mod` requires `github.com/sadayamuthu/switchyard v0.0.0-00010101000000-000000000000`.
+- `agentchaos/go.mod` requires `github.com/sadayamuthu/switchyard v0.1.0`. No `go.work`, no `replace`: the build must work from a clean checkout with the public module proxy.
+- Fault targeting must be deterministic under parallel tool calls: it keys on switchyard's `ToolCall.Seq` (per-tool arrival order), never on a counter incremented inside `OnRequest`.
 - Fault types exactly: `timeout`, `slow`, `error`, `partial`, `malformed`.
 - Per-run wall-clock limit default `5m`; killed runs fail with reason `did-not-finish`.
 - Claude Code preset sets `MCP_TOOL_TIMEOUT=30000` in the agent's environment.
@@ -59,7 +60,7 @@ agentchaos/
 ### Task 1: Module, workspace, experiment schema
 
 **Files:**
-- Create: `go.mod`, `~/git-openastra/go.work`, `internal/experiment/schema.go`, `internal/experiment/load.go`
+- Create: `go.mod`, `internal/experiment/schema.go`, `internal/experiment/load.go`
 - Test: `internal/experiment/load_test.go`, `internal/experiment/testdata/*.yaml`
 
 **Interfaces:**
@@ -76,7 +77,7 @@ agentchaos/
 
 **Validation rules:** server keys non-empty, no `.`; `fault.tool` server exists; `fault.type` in the five; exactly one trigger among `on_call>0`, `every_call`, `probability` in (0,1]; `slow` requires `delay>0`; `max_calls.tool`, `must_call`, `must_not_call` reference existing servers; regexes compile; experiment names unique; `runs>=1`; `0<pass_threshold<=1`.
 
-- [ ] **Step 1: Create go.mod and go.work; `go build ./...` in `~/git-openastra` succeeds with switchyard resolved locally.**
+- [ ] **Step 1: `go mod init github.com/sadayamuthu/agentchaos`, set `go 1.26`, `go get github.com/sadayamuthu/switchyard@v0.1.0`; `go build ./...` succeeds.**
 - [ ] **Step 2: Write failing tests:** `TestLoadSpecExample` (the spec's YAML example loads; `Runs==5`, `RunTimeout==5m`, fault server `crm`, tool `lookup`); `TestValidateErrors` table — unknown server, bad type, two triggers, `slow` without delay, bad regex, duplicate name, server key with dot — each error message names the offending field; `TestRelativePaths` (`./crm-server` in `testdata/sub/x.yaml` → absolute path under `testdata/sub`).
 - [ ] **Step 3: Run `go test ./internal/experiment/...` — expect FAIL.**
 - [ ] **Step 4: Implement.**
@@ -92,16 +93,16 @@ agentchaos/
 - Test: `internal/faults/hook_test.go`
 
 **Interfaces:**
-- Consumes: `experiment.Fault`; switchyard `Hook`, `Base`, decisions, `Annotate`, `Session.Update`, `Response.ToolResult`, `testkit`.
+- Consumes: `experiment.Fault`; switchyard `Hook`, `Base`, decisions, `Annotate`, `Request.ToolCall()` (with `Seq`), `Session.Set/Get`, `Response.ToolResult`, `testkit`.
 - Produces: `func New(f experiment.Fault) switchyard.Hook` — `Name()` returns `agentchaos`. Applies only to `tools/call` whose tool name equals `f.ToolName()`.
 
 **Behaviour (exact):**
-- Per-session counter of calls to the target tool via `Session.Update`. Triggers: `on_call: n` → nth call only; `every_call` → all; `probability` → `rand.New(rand.NewPCG(uint64(seed), 0))` drawn once per target call, in call order.
+- The call index is `ToolCall.Seq` (1-based, per tool name, in arrival order; assigned by switchyard before hooks run). Triggers: `on_call: n` → the call with `Seq == n` only; `every_call` → all; `probability: p` → faulted iff `rand.New(rand.NewPCG(uint64(seed), seq)).Float64() < p`, so each call's outcome depends only on (seed, seq) and is identical across runs regardless of goroutine scheduling.
 - Triggered request decisions, all annotated `fault-<type>`:
   - `timeout` → `Hang()`
   - `slow` → sleep `Delay` (respecting ctx), then `Continue()`
   - `error` → `BlockTool(Message)` if `ErrorMode=="tool"`, else `Block(&jsonrpc.Error{Code:-32603, Message:Message})`
-  - `partial`, `malformed` → `Continue()`, and mark the request ID in the session so `OnResponse` mutates it.
+  - `partial`, `malformed` → `Continue()` annotated `fault-<type>`. switchyard passes the same `*Request` to `OnRequest` and `OnResponse`, so record the decision keyed by `Request.Seq` in the session (`Session.Set`), and in `OnResponse` mutate only requests whose `Seq` is recorded, then delete the key.
 - `partial`: each text content item truncated to `Bytes` if >0, else `floor(len*Fraction)` bytes, cut on a UTF-8 boundary; non-text items left untouched.
 - `malformed`: `invalid-json` → each text item's text replaced by its first half plus `{"` (unterminated); `drop-fields` → remove `content`, keep other fields; `wrong-types` → `content` replaced with the string `"content"`.
 
@@ -113,6 +114,7 @@ agentchaos/
   - `TestMalformedInvalidJSON`: text is not valid JSON.
   - `TestOtherToolUntouched`: `other` never faulted.
   - `TestProbabilitySeedReproducible`: probability 0.5 seed 42, 20 calls, run twice → identical faulted-call index sets.
+  - `TestOnCallParallelDeterministic`: `on_call: 3`, fire 6 calls to the target tool concurrently (send all, then await all), repeat 20 times → in every repeat exactly the call whose ToolCall.Seq is 3 (the third sent) is faulted.
   - `TestDecisionAnnotated`: with `testkit.Recorder`, request event decision is `hang:fault-timeout`.
 - [ ] **Step 2: Run — expect FAIL.**
 - [ ] **Step 3: Implement.**
