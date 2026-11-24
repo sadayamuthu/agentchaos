@@ -101,6 +101,22 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		res.Checks = append(res.Checks, grade.Check{Name: "setup", Pass: false, Detail: err.Error()})
 		return res
 	}
+	// Every path written into mcp.json and the agent's argv must be
+	// absolute: the agent and the proxies do not run in our cwd.
+	dir, err := filepath.Abs(dir)
+	if err != nil {
+		return setupErr(err)
+	}
+	self := r.Self
+	if strings.Contains(self, "/") { // a bare name is left for PATH lookup
+		if self, err = filepath.Abs(self); err != nil {
+			return setupErr(err)
+		}
+	}
+	expPath, err := filepath.Abs(r.File.Path)
+	if err != nil {
+		return setupErr(err)
+	}
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return setupErr(err)
 	}
@@ -115,12 +131,12 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	for i, name := range servers {
 		srv := r.File.Servers[name]
 		traces[i] = filepath.Join(dir, "trace-"+name+".jsonl")
-		args := []string{"proxy", "--experiment", r.File.Path, "--name", exp.Name, "--server", name, "--trace", traces[i], "--"}
+		args := []string{"proxy", "--experiment", expPath, "--name", exp.Name, "--server", name, "--trace", traces[i], "--"}
 		env := srv.Env
 		if env == nil {
 			env = map[string]string{}
 		}
-		cfg["mcpServers"][name] = mcpServer{Command: r.Self, Args: append(args, srv.Command...), Env: env}
+		cfg["mcpServers"][name] = mcpServer{Command: self, Args: append(args, srv.Command...), Env: env}
 	}
 	mcpPath := filepath.Join(dir, "mcp.json")
 	stdoutPath, stderrPath := filepath.Join(dir, "stdout.txt"), filepath.Join(dir, "stderr.txt")

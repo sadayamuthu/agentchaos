@@ -66,7 +66,14 @@ experiments:
 
 func agentchaos(t *testing.T, args ...string) (stdout, stderr string, code int) {
 	t.Helper()
+	return agentchaosIn(t, "", args...)
+}
+
+// agentchaosIn runs agentchaos with working directory dir ("" for the test's).
+func agentchaosIn(t *testing.T, dir string, args ...string) (stdout, stderr string, code int) {
+	t.Helper()
 	cmd := exec.Command(agentchaosBin, args...)
+	cmd.Dir = dir
 	var o, e bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &o, &e
 	err := cmd.Run()
@@ -96,6 +103,50 @@ func TestRunEndToEnd(t *testing.T) {
 	var rep struct{ Version int }
 	if err := json.Unmarshal(data, &rep); err != nil || rep.Version != 1 {
 		t.Fatalf("report: %v %s", err, data)
+	}
+}
+
+// TestRunRelativeOut: a relative --out is relative to the user's cwd, while
+// the agent runs elsewhere, so every path handed to it must be absolute.
+func TestRunRelativeOut(t *testing.T) {
+	cwd := t.TempDir()
+	exp := writeExperiment(t) // in a different directory from cwd
+	stdout, stderr, code := agentchaosIn(t, cwd, "run", exp, "--out", "rel/out")
+	if code != 0 {
+		t.Fatalf("exit %d\nstdout:\n%s\nstderr:\n%s", code, stdout, stderr)
+	}
+	data, err := os.ReadFile(filepath.Join(cwd, "rel", "out", "report.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var rep struct {
+		Experiments []struct {
+			Runs []struct {
+				Status     string   `json:"status"`
+				TraceFiles []string `json:"trace_files"`
+			} `json:"runs"`
+		} `json:"experiments"`
+	}
+	if err := json.Unmarshal(data, &rep); err != nil {
+		t.Fatal(err)
+	}
+	if len(rep.Experiments) != 1 || len(rep.Experiments[0].Runs) != 1 {
+		t.Fatalf("report %s", data)
+	}
+	r := rep.Experiments[0].Runs[0]
+	if r.Status != "pass" || len(r.TraceFiles) != 1 {
+		t.Fatalf("run %+v", r)
+	}
+	for _, p := range r.TraceFiles {
+		if !filepath.IsAbs(p) {
+			t.Fatalf("trace path %q is not absolute", p)
+		}
+		if _, err := os.Stat(p); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if !strings.Contains(stdout, "Report: "+filepath.Join(cwd, "rel", "out", "report.json")) {
+		t.Fatalf("stdout does not name the absolute report path:\n%s", stdout)
 	}
 }
 

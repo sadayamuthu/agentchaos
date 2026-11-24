@@ -68,6 +68,12 @@ func runCmd(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	if dir == "" {
 		dir = filepath.Join("agentchaos-out", time.Now().Format("20060102-150405"))
 	}
+	// The agent and its proxies run in other directories, so every path
+	// derived from these must be absolute.
+	if dir, err = filepath.Abs(dir); err != nil {
+		fmt.Fprintf(stderr, "agentchaos: %v\n", err)
+		return 2
+	}
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		fmt.Fprintf(stderr, "agentchaos: %v\n", err)
 		return 2
@@ -75,6 +81,10 @@ func runCmd(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	reportPath := *jsonPath
 	if reportPath == "" {
 		reportPath = filepath.Join(dir, "report.json")
+	}
+	if reportPath, err = filepath.Abs(reportPath); err != nil {
+		fmt.Fprintf(stderr, "agentchaos: %v\n", err)
+		return 2
 	}
 
 	r := &runner.Runner{File: f, Self: self, WorkDir: dir}
