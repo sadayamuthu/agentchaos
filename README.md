@@ -59,7 +59,7 @@ distributed systems; agents need the same discipline.
 ## How it works
 
 1. **Wrap the tools.** `agentchaos` runs the agent against its real tools
-   through a fault-injecting proxy (MCP or HTTP).
+   through a fault-injecting MCP proxy (stdio MCP in v0; HTTP is planned).
 2. **Inject faults** from a library of experiments:
    - `timeout`, `slow`, `error`: the tool hangs, lags or fails
    - `partial`: truncated or paginated-away results
@@ -134,7 +134,7 @@ The plan, from the first working version to 1.0, is in [ROADMAP.md](ROADMAP.md).
 
 ## Built on switchyard
 
-`agentchaos` will be a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → fuse → intentlock → taintline → rewind → MCP server`).
+`agentchaos` is a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → fuse → intentlock → taintline → rewind → MCP server`).
 
 ---
 
@@ -148,7 +148,7 @@ The plan, from the first working version to 1.0, is in [ROADMAP.md](ROADMAP.md).
 
 ## Contributing
 
-Design feedback, real-world cases and fixes are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help while the project is at the design stage, and [GOVERNANCE.md](GOVERNANCE.md) for how decisions are made.
+Design feedback, real-world cases and fixes are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help while v0 is in development, and [GOVERNANCE.md](GOVERNANCE.md) for how decisions are made.
 
 ---
 

@@ -73,11 +73,27 @@ pass, detail), `exit_code`, `duration_ms`, `trace_files` (JSONL traces of the
 MCP traffic, in the output directory) and the tails of the agent's stdout and
 stderr. Start with the failed runs' `reason` and `stdout_tail`.
 
+A run whose fault never fired is `invalid`, not `pass` or `fail`:
+`fault-not-triggered` if the agent never made the faulted call, or
+`server-unavailable` if the fault's server never answered at all (usually it
+failed to start). For the latter, the `server` check's detail is the end of
+`proxy-<server>.log` in the run's directory, which holds the proxy's
+diagnostics and the server's stderr. `experiment_snapshot` in the report is
+the copy of the suite, taken when the run started, that the proxies injected
+faults from.
+
 ## Write your own experiment
 
 Copy `support-agent.yaml`. Each experiment names a `task` (the prompt), one
 `fault` on a `<server>.<tool>`, and `expect` checks. v0 faults are `timeout`,
 `slow`, `error`, `partial` and `malformed`. Unknown YAML keys are errors.
+Server keys may use ASCII letters, digits, `_` and `-`.
+
+`expect.backoff` checks that the gaps between three or more identical calls
+to a tool grow. It measures wall-clock time, so with an LLM agent the model's
+own latency between calls can hide or fake a backoff. For LLM agents prefer
+`max_calls` and `stops_within`, which count calls; keep `backoff` for agents
+whose retry timing is their own code's.
 
 To test an agent other than the Claude Code preset, replace `agent.preset` with
 `agent.command`, a list that AgentChaos runs once per run:

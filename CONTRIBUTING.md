@@ -2,9 +2,10 @@
 
 Thanks for helping. AgentChaos injects tool failures (timeouts, errors, partial and malformed results) into an AI agent's MCP tool calls through a fault-injecting proxy, and grades how the agent behaves from the call trace.
 
-AgentChaos is at the **design stage**: the README and
-[THESIS.md](THESIS.md) describe what it will do, and there is little or no
-code yet. Right now the most useful contributions are on the design itself.
+AgentChaos is at **v0, in development**: the MCP proxy, the experiment format
+and the `run` command work, but formats and flags may still change. The README
+says what v0 does and what is still planned, and [THESIS.md](THESIS.md) says
+why. Bug reports, real-world cases and feedback on the design are all useful.
 
 - [Ways to help](#ways-to-help)
 - [Reporting a bug or a design problem](#reporting-a-bug-or-a-design-problem)
@@ -32,7 +33,7 @@ the approach before you write the code.
 
 Please include:
 
-1. The version or commit, your Go version and OS, once there is code to run.
+1. The version (`agentchaos version`) or commit, your Go version and OS.
 2. What you did, and what happened.
 3. What you expected instead, and why.
 4. A minimal reproduction, ideally as a failing test.
