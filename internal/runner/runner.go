@@ -78,6 +78,9 @@ type Runner struct {
 	// WorkDir holds one directory per run: <exp-slug>/<index>/. The agent
 	// runs with its run directory as cwd.
 	WorkDir string
+	// OnResult, if set, is called after each completed run with all results
+	// so far.
+	OnResult func(results []RunResult)
 }
 
 // RunAll runs the experiments in order, each File.Runs times, sequentially.
@@ -96,6 +99,9 @@ func (r *Runner) RunAll(ctx context.Context) []RunResult {
 				return out
 			}
 			out = append(out, r.run(ctx, exp, filepath.Join(r.WorkDir, s, strconv.Itoa(i)), i))
+			if r.OnResult != nil {
+				r.OnResult(out)
+			}
 		}
 	}
 	return out

@@ -476,3 +476,13 @@ func TestRunDirAbsoluteForRelativeWorkDir(t *testing.T) {
 		t.Fatalf("dir %q", res.Dir)
 	}
 }
+
+func TestRunOnResult(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--max-attempts", "1", "--on-failure", "report"), "", "runs: 2\nrun_timeout: 30s", errorExperiment)
+	var sizes []int
+	r.OnResult = func(rs []runner.RunResult) { sizes = append(sizes, len(rs)) }
+	r.RunAll(context.Background())
+	if len(sizes) != 2 || sizes[0] != 1 || sizes[1] != 2 {
+		t.Fatalf("OnResult sizes %v, want [1 2]", sizes)
+	}
+}

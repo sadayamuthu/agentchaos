@@ -161,3 +161,26 @@ func TestWriteJSONProvenanceAndRunFields(t *testing.T) {
 		t.Fatalf("%+v", r)
 	}
 }
+
+func TestWriteJSONReplacesAtomically(t *testing.T) {
+	dir := t.TempDir()
+	p := filepath.Join(dir, "r.json")
+	f := file(0.8)
+	if err := report.WriteJSON(p, f, "first", report.Provenance{}, results()); err != nil {
+		t.Fatal(err)
+	}
+	if err := report.WriteJSON(p, f, "second", report.Provenance{}, results()[:1]); err != nil {
+		t.Fatal(err)
+	}
+	data, _ := os.ReadFile(p)
+	var got struct {
+		Snapshot string `json:"experiment_snapshot"`
+	}
+	if err := json.Unmarshal(data, &got); err != nil || got.Snapshot != "second" {
+		t.Fatalf("%v %s", err, data)
+	}
+	ents, _ := os.ReadDir(dir)
+	if len(ents) != 1 {
+		t.Fatalf("leftover files: %v", ents)
+	}
+}

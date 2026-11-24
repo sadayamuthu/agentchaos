@@ -113,14 +113,24 @@ func runCmd(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	}
 
 	r := &runner.Runner{File: f, Self: self, WorkDir: dir, Snapshot: snapshot}
-	started := time.Now()
-	results := r.RunAll(ctx)
 	prov := report.Provenance{
 		AgentchaosVersion: currentVersion(), GoVersion: runtime.Version(),
-		OS: runtime.GOOS + "/" + runtime.GOARCH, StartedAt: started, FinishedAt: time.Now(),
+		OS: runtime.GOOS + "/" + runtime.GOARCH, StartedAt: time.Now().UTC(),
 	}
+	write := func(results []runner.RunResult) error {
+		prov.FinishedAt = time.Now().UTC()
+		return report.WriteJSON(reportPath, f, snapshot, prov, results)
+	}
+	// Rewrite the report after every run, so a hard kill of a long run
+	// still leaves a report of the runs finished so far.
+	r.OnResult = func(results []runner.RunResult) {
+		if err := write(results); err != nil {
+			fmt.Fprintf(stderr, "agentchaos: writing report: %v\n", err)
+		}
+	}
+	results := r.RunAll(ctx)
 
-	if err := report.WriteJSON(reportPath, f, snapshot, prov, results); err != nil {
+	if err := write(results); err != nil {
 		fmt.Fprintf(stderr, "agentchaos: writing report: %v\n", err)
 		return 2
 	}
