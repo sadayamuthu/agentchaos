@@ -1,0 +1,9 @@
+agent:
+  command: ["./agent", "--prompt", "{prompt}"]
+servers:
+  crm: { command: ["./crm-server", "--flag"] }
+  bare: { command: ["claude"] }
+experiments:
+  - name: a
+    task: t
+    fault: { tool: crm.lookup, type: timeout, on_call: 1 }
