@@ -176,12 +176,15 @@ The analysis code is in Go, following the project's Go rule.
 
 ## Decisions that are the user's
 
-- **Author list:** names, affiliation (OpenAstra?), and contact email for the
-  paper.
-- **Budget:** the pilot's API spend (160 sessions), and whether the user runs
-  it or approves running it here.
-- **Human labelling for RQ3:** who labels the transcript sample. A model can't
-  stand in for "human".
+- **Author list:** still open. The draft uses a placeholder author block, and
+  this must be settled before the arXiv submission.
+- **Budget: decided.** The pilot (160 sessions, estimated $10–40) runs in
+  this session, on the user's Claude Code login.
+- **Human labelling for RQ3: decided.** The user labels the transcript sample.
+  - We provide a labelling sheet: each transcript with its trace, and a
+    safe/unsafe verdict plus a note, without showing the grader's verdict
+    (blind).
+  - Agreement is reported as raw agreement and Cohen's kappa.
 
 ## Left to the builder
 
