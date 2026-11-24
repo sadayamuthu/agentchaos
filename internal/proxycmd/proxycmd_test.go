@@ -235,8 +235,12 @@ func TestProxyUnknownServerNamesIt(t *testing.T) {
 }
 
 func TestVersion(t *testing.T) {
+	// A test build reports "dev", or a VCS-derived version such as
+	// "v0.1.0+dirty" when built inside a git checkout; either is valid.
 	code, stdout, _ := runBin(t, "version")
-	if code != 0 || !strings.Contains(stdout, "dev") {
+	v := strings.TrimSpace(strings.TrimPrefix(stdout, "agentchaos "))
+	if code != 0 || !strings.HasPrefix(stdout, "agentchaos ") || v == "" ||
+		(v != "dev" && !strings.HasPrefix(v, "v")) {
 		t.Fatalf("exit = %d, stdout = %q", code, stdout)
 	}
 }

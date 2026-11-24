@@ -18,9 +18,6 @@ import (
 	"github.com/sadayamuthu/agentchaos/internal/proxycmd"
 )
 
-// version is overridden at build time with -ldflags "-X main.version=...".
-var version = "dev"
-
 const usage = "usage: agentchaos <proxy|run|version> [args]"
 
 func main() {
@@ -41,7 +38,7 @@ func run(ctx context.Context, args []string, stdin io.Reader, stdout, stderr io.
 	case "run":
 		return runCmd(ctx, args[1:], stdout, stderr)
 	case "version":
-		fmt.Fprintln(stdout, "agentchaos", version)
+		fmt.Fprintln(stdout, "agentchaos", currentVersion())
 		return 0
 	case "-h", "--help", "help":
 		fmt.Fprintln(stderr, usage)
