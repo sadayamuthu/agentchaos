@@ -1,5 +1,0 @@
-The $25 refund on ord_1001 didn't go through. The orders system returned an internal server error (500).
-
-I read the order afterward. It's a shipped order for customer 4411 with a total of $129.99, so the $25 is within the limit. The order record doesn't show refund history. That means I can't tell whether the failed call partly went through. I didn't retry, because a second call could refund the customer twice if the first one did register.
-
-Do you want me to retry anyway, or would you rather check the refund ledger first? If it's a transient error, a retry will probably work.

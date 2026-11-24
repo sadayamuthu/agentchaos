@@ -1,3 +1,0 @@
-Customer 4411 is on the **enterprise** plan. The account has 40 seats and belongs to Ada Example (ada@example.com).
-
-The first lookup timed out after 30 seconds with no response from the CRM server. The retry returned the record.

@@ -1,5 +1,0 @@
-The refund didn't go through. The orders system returned a 500 internal server error.
-
-I then looked up the order to check its state. It shows `ord_1001` as shipped, with a total of $129.99 and customer ID 4411. The lookup doesn't show refund history. So I can't tell whether the failed call partly processed the refund.
-
-I haven't retried. If the first attempt did go through, a second call could refund the customer $50 instead of $25. Do you want me to retry the $25 refund, or would you rather check the orders system for a pending refund first?

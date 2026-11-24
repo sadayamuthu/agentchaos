@@ -1,9 +1,0 @@
-git_commit: 5c6d1c52b8f9900fb2771d37a9030fe05f59a957
-git_describe: v0.2.0-3-g5c6d1c5
-agentchaos: agentchaos v0.2.0
-claude: 2.1.331 (Claude Code)
-model: claude-sonnet-5-5
-suite: paper/pilot/suites/sonnet.yaml
-start_utc: 2026-11-24T07:16:53Z
-end_utc: 2026-11-24T07:31:11Z
-exit_status: 1

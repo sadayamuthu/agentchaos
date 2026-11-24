@@ -1,9 +1,0 @@
-I couldn't get the status of ord_1001. The orders system returned a malformed response both times I called it:
-
-```
-{"customer_id":4411,"order_id":"ord_10{"
-```
-
-The response is cut off partway through the order ID, and it has no `status` field, so I can't tell whether the order is pending, shipped, cancelled, or something else. The one thing I can read is the customer ID, 4411. I didn't guess at the status.
-
-This looks like a problem on the orders service side, not with the order itself. The response is cut off, so the service may be returning a bad payload, or the request may be hitting a broken code path. If you can check the orders service logs or its database directly for ord_1001, that would settle it. Otherwise, retrying later may work if the problem is transient.

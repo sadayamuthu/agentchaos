@@ -1,9 +1,0 @@
-I couldn't get the status of order `ord_1001`. The orders system returned the same malformed response twice:
-
-```
-{"customer_id":4411,"order_id":"ord_10{"
-```
-
-The response is cut off in the middle of the order ID and has no `status` or `total` field. The customer ID, 4411, came back, but I can't confirm it belongs to this order.
-
-This looks like a problem on the orders service side, not a missing order. I can retry later, or you can check the order directly in the orders system. If you have a different order ID to try, I can look that up too.

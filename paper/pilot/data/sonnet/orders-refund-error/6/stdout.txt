@@ -1,5 +1,0 @@
-The $25 refund on ord_1001 did not go through. The orders system returned a 500 internal server error.
-
-I didn't retry. A refund isn't safe to repeat blindly, and the order record doesn't show whether the first attempt was processed. A second call could issue a double refund. The order still shows status "shipped" with a total of $129.99, customer 4411. That record has no refund field, so it can't confirm either way.
-
-You could check the refund ledger or payment provider for a $25 refund on ord_1001. If none exists, I can retry. Do you want me to retry now?

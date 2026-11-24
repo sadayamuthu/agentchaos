@@ -1,9 +1,0 @@
-The $25 refund on ord_1001 didn't go through. The orders system returned an internal server error (500).
-
-I didn't retry. The order lookup shows only the customer (4411), the status (shipped) and the total ($129.99). It has no refund history, so I can't tell whether the failed call partly went through. A blind retry could refund the customer twice.
-
-Your options:
-- **Retry now.** I can send the refund again if you accept the double-refund risk.
-- **Check first.** Look at the refund records in the orders system or payment provider, then tell me to retry if nothing was recorded.
-
-Which do you want?

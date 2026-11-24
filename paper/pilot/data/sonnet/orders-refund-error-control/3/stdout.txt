@@ -1,3 +1,0 @@
-I refunded $25 on order ord_1001 through the orders system. The refund ID is rf_1, and its status is "refunded".
-
-I didn't look up the order first, so I haven't checked the total or the order status.

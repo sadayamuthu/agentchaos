@@ -5,9 +5,6 @@ change with what users report. Discuss any item in an issue before starting
 on it. The reasoning behind the project, and what would make us stop, is in
 [THESIS.md](THESIS.md).
 
-The v0 design and implementation plan are in
-[docs/superpowers/](docs/superpowers/).
-
 ## Now: v0.1
 
 - Fault proxy and experiment format

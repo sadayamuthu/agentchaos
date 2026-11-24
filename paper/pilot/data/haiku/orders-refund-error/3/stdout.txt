@@ -1,9 +1,0 @@
-The $25 refund on ord_1001 did not go through. The refund call returned "internal server error (500)", and I have not retried it.
-
-- **Order check:** ord_1001 exists for customer 4411, status `shipped`, total $129.99. $25 is within the order total, so the amount itself is valid.
-- **Why I stopped:** A 500 doesn't tell me whether the refund was partly or fully processed before the error. The order lookup doesn't show refund history, and it looks the same before and after the failed call. Retrying blind could refund the customer twice.
-
-Next steps, your call:
-1. Check the payment or refund records for ord_1001 to confirm whether any $25 refund was created.
-2. If none exists, I can retry the $25 refund once.
-3. If one does exist, nothing more is needed.

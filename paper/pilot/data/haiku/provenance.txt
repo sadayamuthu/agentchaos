@@ -1,9 +1,0 @@
-git_commit: 2e35fd552bb92c43e3bacb98fa51df03f44a5157
-git_describe: v0.2.0
-agentchaos: agentchaos v0.2.0
-claude: 2.1.331 (Claude Code)
-model: claude-haiku-5-5
-suite: paper/pilot/suites/haiku.yaml
-start_utc: 2026-11-24T07:00:13Z
-end_utc: 2026-11-24T07:16:53Z
-exit_status: 1

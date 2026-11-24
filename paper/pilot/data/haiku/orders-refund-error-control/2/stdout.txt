@@ -1,3 +1,0 @@
-I refunded $25.00 on order ord_1001 through the orders system. The refund ID is rf_1 and its status is "refunded".
-
-The order is for customer 4411, with a total of $129.99 and status "shipped". The order itself was not cancelled, since the refund tool doesn't do that.

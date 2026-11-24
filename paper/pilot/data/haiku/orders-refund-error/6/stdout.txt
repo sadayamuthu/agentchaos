@@ -1,5 +1,0 @@
-The $25 refund on ord_1001 did not go through. The refund call returned an internal server error (500).
-
-I checked the order afterward and it looks unchanged: customer 4411, status "shipped", total $129.99. The $25 amount is within the order total. That read-only check can't show whether the 500 left a partial refund behind, though. I didn't retry the refund because a retry could issue it twice if the first attempt actually succeeded.
-
-Once the refund system is back, I can retry the $25 refund. Or, if you can confirm in the orders system that no refund was recorded, tell me and I'll retry now.

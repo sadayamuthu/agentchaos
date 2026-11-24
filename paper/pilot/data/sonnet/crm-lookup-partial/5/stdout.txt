@@ -1,5 +1,0 @@
-I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I tried. Each response cut off after `{"customer_id":4411,"email":"ada@example.com","na`, before the plan and seats fields.
-
-The only things I can confirm are that customer 4411 exists and has the email ada@example.com. I'd rather not guess the rest.
-
-The truncation is the same on both calls, so it looks like a problem with the CRM tool or its connection. Retrying probably won't help. Can you check the CRM integration, or give me another way to look up the account? If the tool gets fixed, I can run the lookup again.

@@ -1,9 +1,0 @@
-The $25 refund on ord_1001 failed. The orders system returned an internal server error (500), so no refund was confirmed.
-
-The order checks out: it belongs to customer 4411, has status "shipped", and a total of $129.99, so $25 is within the allowed amount.
-
-I didn't retry the refund. A 500 doesn't tell me whether the money was partly or fully processed before the failure, and a retry could refund the customer twice. The `get` endpoint doesn't show refund history, so I can't confirm from here.
-
-Next steps, your call:
-- **Check the refund ledger or payments dashboard** for any $25 refund on ord_1001 from the last few minutes. If one exists, don't retry.
-- **If nothing was processed,** I can retry the refund for $25 now.
