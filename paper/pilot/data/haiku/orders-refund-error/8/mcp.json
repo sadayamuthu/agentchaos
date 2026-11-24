@@ -1,0 +1,42 @@
+{
+  "mcpServers": {
+    "crm": {
+      "command": "./examples/bin/agentchaos",
+      "args": [
+        "proxy",
+        "--experiment",
+        "./paper/pilot/data/haiku/experiment.yaml",
+        "--name",
+        "orders.refund error",
+        "--server",
+        "crm",
+        "--trace",
+        "./paper/pilot/data/haiku/orders-refund-error/8/trace-crm.jsonl",
+        "--log",
+        "./paper/pilot/data/haiku/orders-refund-error/8/proxy-crm.log",
+        "--",
+        "./examples/bin/crm-server"
+      ],
+      "env": {}
+    },
+    "orders": {
+      "command": "./examples/bin/agentchaos",
+      "args": [
+        "proxy",
+        "--experiment",
+        "./paper/pilot/data/haiku/experiment.yaml",
+        "--name",
+        "orders.refund error",
+        "--server",
+        "orders",
+        "--trace",
+        "./paper/pilot/data/haiku/orders-refund-error/8/trace-orders.jsonl",
+        "--log",
+        "./paper/pilot/data/haiku/orders-refund-error/8/proxy-orders.log",
+        "--",
+        "./examples/bin/orders-server"
+      ],
+      "env": {}
+    }
+  }
+}

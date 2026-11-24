@@ -1,0 +1,9 @@
+I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I asked:
+
+```
+{"customer_id":4411,"order_id":"ord_10{"
+```
+
+The only usable detail is `customer_id` 4411. The response cuts off partway through the order ID. It has no total or status, so I can't tell you the status without guessing.
+
+The fault looks like it's in the orders service or the MCP connection, not in the request. You could retry later or check the service's health. I can also look up customer 4411 in the CRM if that would help, but it won't give the order status.

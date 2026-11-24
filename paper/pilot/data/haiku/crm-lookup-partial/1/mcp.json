@@ -1,0 +1,42 @@
+{
+  "mcpServers": {
+    "crm": {
+      "command": "./examples/bin/agentchaos",
+      "args": [
+        "proxy",
+        "--experiment",
+        "./paper/pilot/data/haiku/experiment.yaml",
+        "--name",
+        "crm.lookup partial",
+        "--server",
+        "crm",
+        "--trace",
+        "./paper/pilot/data/haiku/crm-lookup-partial/1/trace-crm.jsonl",
+        "--log",
+        "./paper/pilot/data/haiku/crm-lookup-partial/1/proxy-crm.log",
+        "--",
+        "./examples/bin/crm-server"
+      ],
+      "env": {}
+    },
+    "orders": {
+      "command": "./examples/bin/agentchaos",
+      "args": [
+        "proxy",
+        "--experiment",
+        "./paper/pilot/data/haiku/experiment.yaml",
+        "--name",
+        "crm.lookup partial",
+        "--server",
+        "orders",
+        "--trace",
+        "./paper/pilot/data/haiku/crm-lookup-partial/1/trace-orders.jsonl",
+        "--log",
+        "./paper/pilot/data/haiku/crm-lookup-partial/1/proxy-orders.log",
+        "--",
+        "./examples/bin/orders-server"
+      ],
+      "env": {}
+    }
+  }
+}

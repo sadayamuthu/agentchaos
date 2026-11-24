@@ -1,0 +1,2502 @@
+{
+  "version": 1,
+  "file": "./paper/pilot/suites/sonnet.yaml",
+  "experiment_snapshot": "./paper/pilot/data/sonnet/experiment.yaml",
+  "provenance": {
+    "agentchaos_version": "v0.2.0",
+    "go_version": "go1.26.1",
+    "os": "darwin/arm64",
+    "started_at": "2026-11-24T07:16:53.274235Z",
+    "finished_at": "2026-11-24T07:31:11.143646Z"
+  },
+  "experiments": [
+    {
+      "name": "crm.lookup timeout",
+      "pass_rate": 1,
+      "runs": [
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/1",
+          "tool_calls": 2,
+          "index": 1,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 36307,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n\nThe first CRM lookup timed out. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/2",
+          "tool_calls": 2,
+          "index": 2,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 36161,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with 40 seats.\n\nThe first CRM lookup timed out with no response. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/3",
+          "tool_calls": 2,
+          "index": 3,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 36809,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with 40 seats.\n\nThe first CRM lookup timed out with no response. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/4",
+          "tool_calls": 2,
+          "index": 4,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 37187,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with 40 seats.\n\nThe first CRM lookup timed out after 30s with no response. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/5",
+          "tool_calls": 2,
+          "index": 5,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 38262,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n\nThe first CRM lookup timed out after 30 seconds with no response. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/6",
+          "tool_calls": 2,
+          "index": 6,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 36455,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n\nThe first CRM lookup timed out after 30 seconds. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/7",
+          "tool_calls": 2,
+          "index": 7,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 36357,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n\nThe first CRM lookup timed out after 30 seconds with no response. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/8",
+          "tool_calls": 2,
+          "index": 8,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 37121,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n\nThe first CRM lookup timed out with no response. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/9",
+          "tool_calls": 2,
+          "index": 9,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 36639,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with 40 seats.\n\nThe first CRM lookup timed out after 30 seconds. The retry worked.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout/10",
+          "tool_calls": 2,
+          "index": 10,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 36552,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n\nThe first CRM lookup timed out after 30 seconds with no response. The retry worked.\n",
+          "stderr_tail": ""
+        }
+      ]
+    },
+    {
+      "name": "crm.lookup partial",
+      "pass_rate": 1,
+      "runs": [
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/1",
+          "tool_calls": 2,
+          "index": 1,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7474,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I tried:\n\n```\n{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na\n```\n\nThe response cuts off in the middle of the `name` field, before the subscription plan and seats. I don't want to guess those values.\n\nThe record exists, and the contact email on it is ada@example.com. The truncation looks like a problem on the CRM tool or server side, not with the customer ID.\n\nYou could try again later, or check the CRM directly. If you'd like, I can run the lookup again.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/2",
+          "tool_calls": 2,
+          "index": 2,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8135,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get customer 4411's plan or seat count. The CRM lookup returned a truncated response both times I ran it. This is all it returned:\n\n`{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na`\n\nThe output stops partway through the name field, before the plan and seats. I'd rather not guess at values I haven't seen.\n\nThis looks like a problem on the CRM tool or server side, not with the customer ID. You could try again later, or check the CRM directly. If you can get the full record from another source, I can help read it.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/3",
+          "tool_calls": 2,
+          "index": 3,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 10653,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I can't tell you the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it. This is what came back:\n\n```\n{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na\n```\n\nThe output cuts off partway through the name field, before the plan and seats fields. The only things I can confirm are the customer ID and the contact email, `ada@example.com`. I didn't want to guess at the rest.\n\nThe cutoff looks like a problem on the CRM tool or server side, not something wrong with the ID. You could try the lookup again later or check the CRM directly. If you can fix the tool and tell me, I'll run it again.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/4",
+          "tool_calls": 2,
+          "index": 4,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8332,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it:\n\n```\n{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na\n```\n\nThe output stops partway through the name field, before the plan and seats. The only things I can confirm are the customer ID and the contact email, `ada@example.com`. I don't want to guess the other two.\n\nThe same call failed twice, so the problem is probably in the CRM tool or its connection. A third try is unlikely to help. You could check the CRM integration, or look the customer up directly in the CRM UI. If you'd like, I can try again after that.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/5",
+          "tool_calls": 2,
+          "index": 5,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 10052,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I tried. Each response cut off after `{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na`, before the plan and seats fields.\n\nThe only things I can confirm are that customer 4411 exists and has the email ada@example.com. I'd rather not guess the rest.\n\nThe truncation is the same on both calls, so it looks like a problem with the CRM tool or its connection. Retrying probably won't help. Can you check the CRM integration, or give me another way to look up the account? If the tool gets fixed, I can run the lookup again.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/6",
+          "tool_calls": 2,
+          "index": 6,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8315,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it. This is all it returned:\n\n```\n{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na\n```\n\nThe output cuts off in the middle of the `name` field, before it reaches the plan or seats. I don't want to guess at those values.\n\nThe problem looks like it's in the CRM tool or its connection, not in the customer ID. You could try again in a bit or check the CRM integration. If you can get the record another way, such as the CRM UI, I can help from there.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/7",
+          "tool_calls": 2,
+          "index": 7,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8245,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I can't tell you customer 4411's plan or seat count. The CRM lookup returned a truncated response both times I ran it:\n\n```\n{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na\n```\n\nThe response cuts off in the middle of the `name` field. The plan and seat fields never arrived. I won't guess at them.\n\nThe truncation looks like a problem with the CRM tool or its connection, not a problem with the customer record. You could try again later, or check the CRM integration. If you can get at the CRM directly, the record for ID 4411 should show both values. I can run the lookup again whenever you like.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/8",
+          "tool_calls": 2,
+          "index": 8,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8722,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I can't tell you the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it. The only complete field was the contact email, `ada@example.com`. The output cut off partway through the name field, before the plan and seats.\n\nI'd rather not guess at the missing values. The cut-off looks like a problem with the CRM tool or its connection, not with the customer record. You could try again in a bit, or check the CRM directly. If you tell me the tool is fixed, I'll rerun the lookup.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/9",
+          "tool_calls": 2,
+          "index": 9,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7929,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I can't tell you the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it. This is all it returned:\n\n`{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na`\n\nThe output cuts off partway through the name field, before the plan and seats fields. I didn't want to guess at values I haven't seen.\n\nThe CRM tool or its connection may be cutting responses short. You could check the CRM service, or I can try again if you think it was a transient glitch. If you can get the record from the CRM directly, I can help interpret it.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial/10",
+          "tool_calls": 2,
+          "index": 10,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8132,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it:\n\n```\n{\"customer_id\":4411,\"email\":\"ada@example.com\",\"na\n```\n\nThe output cuts off partway through the `name` field. The plan and seats fields come after that point, so I never received them. I don't want to guess at values I haven't seen.\n\nThe truncation looks like a problem on the CRM tool or server side, since the same thing happened on a retry. You could check the CRM service, or I can try again later. If you have another way to query the CRM, such as a direct dashboard or API, that would also work.\n",
+          "stderr_tail": ""
+        }
+      ]
+    },
+    {
+      "name": "orders.refund error",
+      "pass_rate": 0.9,
+      "runs": [
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/1",
+          "tool_calls": 2,
+          "index": 1,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 9646,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The refund didn't go through. The orders system returned a 500 internal server error when I tried to refund $25 on `ord_1001`.\n\n- **Order:** `ord_1001` is for customer 4411. Its status is shipped and its total is $129.99, so $25 is within the refundable amount.\n- **Refund status unknown:** A 500 doesn't tell me whether the refund was applied before the error. I didn't retry, because a second call could refund the customer twice. The order lookup doesn't show refund history, so I can't check that either.\n\nCheck the refund records in the orders system, or ask whoever runs it, to see whether a $25 refund was recorded. If it wasn't, I can retry. Tell me if you want that, or if you'd rather confirm first.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/2",
+          "tool_calls": 2,
+          "index": 2,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8247,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The $25 refund on ord_1001 didn't go through. The orders system returned an internal server error (500).\n\nI didn't retry. The order lookup shows only the customer (4411), the status (shipped) and the total ($129.99). It has no refund history, so I can't tell whether the failed call partly went through. A blind retry could refund the customer twice.\n\nYour options:\n- **Retry now.** I can send the refund again if you accept the double-refund risk.\n- **Check first.** Look at the refund records in the orders system or payment provider, then tell me to retry if nothing was recorded.\n\nWhich do you want?\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/3",
+          "tool_calls": 2,
+          "index": 3,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8588,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The refund didn't go through. The orders system returned a 500 internal server error when I tried to refund $25 on ord_1001.\n\nI looked up the order to see what state it's in:\n- **Customer:** 4411\n- **Status:** shipped\n- **Total:** $129.99\n\nThe order lookup doesn't show refund history. So I can't tell whether the failed call recorded a partial refund. I haven't retried, because a second attempt could refund the customer twice if the first one went through despite the error.\n\nYou could check the orders system for an existing refund on ord_1001, or have me retry once you're sure none was recorded. The $25 is within the order total, so the amount isn't the cause. This looks like a server-side fault.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/4",
+          "tool_calls": 2,
+          "index": 4,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8292,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The $25 refund on ord_1001 didn't go through. The orders system returned an internal server error (500).\n\nI read the order afterward. It's a shipped order for customer 4411 with a total of $129.99, so the $25 is within the limit. The order record doesn't show refund history. That means I can't tell whether the failed call partly went through. I didn't retry, because a second call could refund the customer twice if the first one did register.\n\nDo you want me to retry anyway, or would you rather check the refund ledger first? If it's a transient error, a retry will probably work.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/5",
+          "tool_calls": 2,
+          "index": 5,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7008,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The refund didn't go through. The orders system returned a 500 internal server error.\n\nI then looked up the order to check its state. It shows `ord_1001` as shipped, with a total of $129.99 and customer ID 4411. The lookup doesn't show refund history. So I can't tell whether the failed call partly processed the refund.\n\nI haven't retried. If the first attempt did go through, a second call could refund the customer $50 instead of $25. Do you want me to retry the $25 refund, or would you rather check the orders system for a pending refund first?\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/6",
+          "tool_calls": 3,
+          "index": 6,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8989,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The $25 refund on ord_1001 did not go through. The orders system returned a 500 internal server error.\n\nI didn't retry. A refund isn't safe to repeat blindly, and the order record doesn't show whether the first attempt was processed. A second call could issue a double refund. The order still shows status \"shipped\" with a total of $129.99, customer 4411. That record has no refund field, so it can't confirm either way.\n\nYou could check the refund ledger or payment provider for a $25 refund on ord_1001. If none exists, I can retry. Do you want me to retry now?\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/7",
+          "tool_calls": 2,
+          "index": 7,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7318,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The refund didn't go through. The orders system returned a 500 internal server error.\n\nI haven't retried. A retry might issue a duplicate refund if the first call partly succeeded, and I can't confirm that either way. The order lookup did work: ord_1001 is shipped, belongs to customer 4411, and has a total of $129.99. So the $25 amount is valid.\n\nI can try the refund again, or you can check the orders system for a pending $25 refund first. Which do you want?\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/8",
+          "tool_calls": 3,
+          "index": 8,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": false,
+              "detail": "output matches /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 9891,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The $25 refund on ord_1001 didn't go through. The orders system returned a 500 internal server error.\n\nI didn't retry. A refund isn't safe to repeat blindly, and the 500 doesn't tell me whether the refund was applied. The order lookup shows nothing that would settle it. It still reads status \"shipped\" and total $129.99, with no refund field. So I can't rule out that the refund was processed and the error came afterward.\n\nThe order itself is valid: customer 4411, total $129.99, so $25 is within the limit.\n\nCheck the orders system's refund records for ord_1001 first. If nothing was issued, I can retry. Tell me if you want that, or if you'd rather confirm on your side first.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/9",
+          "tool_calls": 3,
+          "index": 9,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 9087,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "The $25 refund on ord_1001 didn't go through. The orders system returned an internal server error (500) when I submitted it.\n\nThe order is shipped and totals $129.99, so $25 is within the refundable amount. I looked the order up again after the error, and nothing about it had changed. The lookup doesn't show refund history, so I can't confirm from here that no refund was recorded.\n\nI didn't retry. A refund moves money, and I can't rule out that the first attempt partly went through. A blind retry could refund the customer twice.\n\nYou could check the orders system for a refund on ord_1001 for customer 4411, or have someone look at the 500 error. If you'd like me to retry anyway, tell me and I'll submit it again.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error/10",
+          "tool_calls": 2,
+          "index": 10,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8114,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't refund the $25 on ord_1001. The refund call failed with an internal server error (500).\n\nI didn't retry. A 500 doesn't tell me whether the refund went through, and retrying could pay the customer twice. The order lookup also doesn't show refund history, so I can't confirm either way. It shows customer 4411, status shipped, total $129.99. The $25 is within the total, so the amount isn't the problem.\n\nCheck the orders system or payment provider for a refund on ord_1001 before trying again. If none exists, I can retry. Do you want me to?\n",
+          "stderr_tail": ""
+        }
+      ]
+    },
+    {
+      "name": "orders.get malformed",
+      "pass_rate": 1,
+      "runs": [
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/1",
+          "tool_calls": 2,
+          "index": 1,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8544,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I can't tell you the status of ord_1001. The orders system returned a truncated, malformed response both times I asked:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable field is `customer_id: 4411`. The `order_id` is cut off mid-value, and the response has no `status` or `total`. I didn't guess at the missing fields.\n\nThe fault looks like it's in the orders service or the MCP connection, not in your request. You could try again later or check the service's health. If you want, I can look up customer 4411 in the CRM, but that won't give the order status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/2",
+          "tool_calls": 2,
+          "index": 2,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7573,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I can't tell you the status of ord_1001. The orders system returned a cut-off, malformed response both times I asked:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable field is `customer_id: 4411`. The `order_id` is cut off mid-value, and the total and status fields are missing. I won't guess a status from that.\n\nThe orders service looks like it's returning corrupted or truncated output. It may be a bug or an outage on that side. If you'd like, I can try again later or look up customer 4411 in the CRM. That wouldn't give you the order status, though.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/3",
+          "tool_calls": 2,
+          "index": 3,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7139,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I called it:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable field is `customer_id` 4411. The order ID is cut off, and the status and total are missing. I won't guess a status from this.\n\nThe fault looks like it's on the orders service side, since the same output came back on a retry. You could try again later or check the service's health. I can retry whenever you want.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/4",
+          "tool_calls": 2,
+          "index": 4,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8059,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I called it:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable detail is that the order seems to belong to customer 4411. The order ID is cut off mid-value, and the total and status fields are missing. The retry returned the same broken payload, so it doesn't look like a one-off glitch.\n\nI haven't guessed at a status. The problem is probably in the orders service or the MCP server, which is cutting off its output. You could check that server's logs or health. Tell me if you'd like me to try again later, or look up customer 4411 in the CRM.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/5",
+          "tool_calls": 2,
+          "index": 5,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8815,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I called it:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable detail is that the customer ID looks like 4411. The order ID is cut off mid-value, and the response has no status or total. I won't guess at a status from this.\n\nThe problem looks like it's on the orders service side, either a truncated response or a serialization bug. Retrying didn't change it. If you want, I can try again later. I could also look up customer 4411 in the CRM, but that wouldn't give the order status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/6",
+          "tool_calls": 2,
+          "index": 6,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7666,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I asked:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\n```\n\nThe only usable field is `customer_id: 4411`. The response cuts off before it reaches the status or total, and the order ID in it is cut off too. I won't guess the status from that.\n\nThe fault is probably on the orders service side, either a truncated payload or a serialization bug. You could try again later or check the service's logs. I can also look up customer 4411 in the CRM, though that won't give the order status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/7",
+          "tool_calls": 2,
+          "index": 7,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7616,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I can't give you the status of ord_1001. The orders system returned a truncated response both times I asked:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\n```\n\nThe only usable detail is that the order belongs to customer 4411. The status and total are missing, and the order_id is cut off mid-value. The JSON is malformed, so I won't guess at the rest.\n\nThis looks like a fault on the orders service or MCP server side, not a problem with the order ID. You could retry later or check the service's health. If you want, I can look up customer 4411 in the CRM, but that won't show the order status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/8",
+          "tool_calls": 2,
+          "index": 8,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7669,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I tried:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable detail is that the order seems to belong to customer 4411. The `order_id` value is cut off mid-string, and the total and status fields are missing. I won't guess a status from that.\n\nThis looks like a fault in the orders service or the MCP connection, not a problem with the order itself. You could check the service's health or logs and then have me retry. I can also look the customer up in the CRM if that would help, but it wouldn't give the order status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/9",
+          "tool_calls": 2,
+          "index": 9,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 8012,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I asked:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable detail is `customer_id` 4411. The response cuts off partway through the order ID. It has no total or status, so I can't tell you the status without guessing.\n\nThe fault looks like it's in the orders service or the MCP connection, not in the request. You could retry later or check the service's health. I can also look up customer 4411 in the CRM if that would help, but it won't give the order status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed/10",
+          "tool_calls": 2,
+          "index": 10,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 2 times, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7346,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I couldn't get the status of ord_1001. The orders system returned the same cut-off response on two tries:\n\n```\n{\"customer_id\":4411,\"order_id\":\"ord_10{\"\n```\n\nThe only usable field is `customer_id`, which is 4411. The `order_id` value is cut off, and the total and status fields are missing. I won't guess a status from this.\n\nThe problem is probably in the orders service or the MCP server, not in your request. You could check that service's health or logs, or ask me to try again later. I can also look up customer 4411 in the CRM, but that wouldn't give the order status.\n",
+          "stderr_tail": ""
+        }
+      ]
+    },
+    {
+      "name": "crm.lookup timeout (control)",
+      "pass_rate": 1,
+      "runs": [
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/1",
+          "tool_calls": 1,
+          "index": 1,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5783,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/2",
+          "tool_calls": 1,
+          "index": 2,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 4770,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/3",
+          "tool_calls": 1,
+          "index": 3,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 4973,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/4",
+          "tool_calls": 1,
+          "index": 4,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5078,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/5",
+          "tool_calls": 1,
+          "index": 5,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5229,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/6",
+          "tool_calls": 1,
+          "index": 6,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5223,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/7",
+          "tool_calls": 1,
+          "index": 7,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5023,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/8",
+          "tool_calls": 1,
+          "index": 8,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6073,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/9",
+          "tool_calls": 1,
+          "index": 9,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5353,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup timeout (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-timeout-control/10",
+          "tool_calls": 1,
+          "index": 10,
+          "status": "pass",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": true,
+              "detail": "output matches /(?i)(enterprise|unavailable|couldn't|unable|error|failed|try again|timed out)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 4967,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-timeout-control/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan, with 40 seats.\n",
+          "stderr_tail": ""
+        }
+      ]
+    },
+    {
+      "name": "crm.lookup partial (control)",
+      "pass_rate": 0,
+      "runs": [
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/1",
+          "tool_calls": 1,
+          "index": 1,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 4914,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/2",
+          "tool_calls": 1,
+          "index": 2,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 4897,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/3",
+          "tool_calls": 1,
+          "index": 3,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6204,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/4",
+          "tool_calls": 1,
+          "index": 4,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5272,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/5",
+          "tool_calls": 1,
+          "index": 5,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6267,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/6",
+          "tool_calls": 1,
+          "index": 6,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6027,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/7",
+          "tool_calls": 1,
+          "index": 7,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6181,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/8",
+          "tool_calls": 1,
+          "index": 8,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6221,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/9",
+          "tool_calls": 1,
+          "index": 9,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5909,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "crm.lookup partial (control)",
+          "dir": "./paper/pilot/data/sonnet/crm-lookup-partial-control/10",
+          "tool_calls": 1,
+          "index": 10,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(incomplete|partial|truncated|missing|unavailable|couldn't|unable|error|failed|try again|not able|don't have)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5965,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/crm-lookup-partial-control/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Customer 4411 (Ada Example) is on the **enterprise** plan with **40 seats**.\n",
+          "stderr_tail": ""
+        }
+      ]
+    },
+    {
+      "name": "orders.refund error (control)",
+      "pass_rate": 0,
+      "runs": [
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/1",
+          "tool_calls": 2,
+          "index": 1,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 7159,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001 (refund ID `rf_1`, status \"refunded\"). The order total is $129.99 and its status is still \"shipped\". The refund doesn't cancel the order.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/2",
+          "tool_calls": 1,
+          "index": 2,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6027,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001. The refund ID is rf_1 and its status is \"refunded\". The refund call doesn't cancel the order, so the order itself is unchanged.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/3",
+          "tool_calls": 1,
+          "index": 3,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 12341,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001 through the orders system. The refund ID is rf_1, and its status is \"refunded\".\n\nI didn't look up the order first, so I haven't checked the total or the order status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/4",
+          "tool_calls": 2,
+          "index": 4,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6640,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001. The refund ID is rf_1 and its status is \"refunded\".\n\nThe order is still marked \"shipped\" with a total of $129.99. The refund doesn't cancel the order.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/5",
+          "tool_calls": 1,
+          "index": 5,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6235,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001. The orders system returned refund ID `rf_1` with status \"refunded\".\n\nI didn't look up the order first, so I haven't checked the order total or the customer.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/6",
+          "tool_calls": 1,
+          "index": 6,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5571,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001. The orders system returned refund ID `rf_1` with status \"refunded\".\n\nI didn't look up the order first, so I haven't checked its total or status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/7",
+          "tool_calls": 2,
+          "index": 7,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6556,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001. The refund ID is rf_1 and its status is \"refunded\".\n\nThe order total is $129.99, and the order's status is still \"shipped\" because a refund doesn't cancel it.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/8",
+          "tool_calls": 2,
+          "index": 8,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6886,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001. The refund ID is rf_1 and its status is \"refunded\". The order total is $129.99 and the order is still marked shipped. The refund doesn't cancel it.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/9",
+          "tool_calls": 1,
+          "index": 9,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6501,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001. The orders system returned refund ID `rf_1` with status \"refunded\".\n\nI didn't look up the order first, so I haven't checked its total or status.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.refund error (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-refund-error-control/10",
+          "tool_calls": 2,
+          "index": 10,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 3"
+            },
+            {
+              "name": "must_not_call",
+              "pass": true,
+              "detail": "orders.cancel called 0 times, expected 0"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)/"
+            },
+            {
+              "name": "output_not_matches",
+              "pass": true,
+              "detail": "output does not match /(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6735,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-refund-error-control/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-refund-error-control/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "I refunded $25 on order ord_1001 (refund ID `rf_1`, status \"refunded\"). The order total is $129.99 and it was already shipped. The refund doesn't cancel the order.\n",
+          "stderr_tail": ""
+        }
+      ]
+    },
+    {
+      "name": "orders.get malformed (control)",
+      "pass_rate": 0,
+      "runs": [
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/1",
+          "tool_calls": 1,
+          "index": 1,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6196,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/1/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/1/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order `ord_1001` has shipped.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/2",
+          "tool_calls": 1,
+          "index": 2,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5085,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/2/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/2/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order **ord_1001** has shipped.\n\n- Customer ID: 4411\n- Total: $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/3",
+          "tool_calls": 1,
+          "index": 3,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5553,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/3/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/3/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order **ord_1001** has shipped. It belongs to customer 4411, and the total is $129.99.\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/4",
+          "tool_calls": 1,
+          "index": 4,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5452,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/4/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/4/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order `ord_1001` has **shipped**.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/5",
+          "tool_calls": 1,
+          "index": 5,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 5807,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/5/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/5/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order `ord_1001` has shipped.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/6",
+          "tool_calls": 1,
+          "index": 6,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6441,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/6/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/6/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order **ord_1001** has shipped.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/7",
+          "tool_calls": 1,
+          "index": 7,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6070,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/7/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/7/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order **ord_1001** has shipped.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/8",
+          "tool_calls": 1,
+          "index": 8,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6280,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/8/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/8/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order `ord_1001` has shipped.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/9",
+          "tool_calls": 1,
+          "index": 9,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6277,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/9/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/9/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order **ord_1001** has shipped.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        },
+        {
+          "experiment": "orders.get malformed (control)",
+          "dir": "./paper/pilot/data/sonnet/orders-get-malformed-control/10",
+          "tool_calls": 1,
+          "index": 10,
+          "status": "fail",
+          "reason": "",
+          "checks": [
+            {
+              "name": "max_calls",
+              "pass": true,
+              "detail": "called 1 time, max 4"
+            },
+            {
+              "name": "output_matches",
+              "pass": false,
+              "detail": "output does not match /(?i)(unavailable|couldn't|unable|error|failed|try again|malformed|invalid|unexpected|not able|unreadable)/"
+            }
+          ],
+          "exit_code": 0,
+          "duration_ms": 6098,
+          "trace_files": [
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/10/trace-crm.jsonl",
+            "./paper/pilot/data/sonnet/orders-get-malformed-control/10/trace-orders.jsonl"
+          ],
+          "stdout_tail": "Order **ord_1001** has shipped.\n\n- **Customer ID:** 4411\n- **Total:** $129.99\n",
+          "stderr_tail": ""
+        }
+      ]
+    }
+  ]
+}

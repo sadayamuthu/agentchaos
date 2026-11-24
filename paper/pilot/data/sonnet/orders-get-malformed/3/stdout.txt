@@ -1,0 +1,9 @@
+I couldn't get the status of ord_1001. The orders system returned a truncated, malformed response both times I called it:
+
+```
+{"customer_id":4411,"order_id":"ord_10{"
+```
+
+The only usable field is `customer_id` 4411. The order ID is cut off, and the status and total are missing. I won't guess a status from this.
+
+The fault looks like it's on the orders service side, since the same output came back on a retry. You could try again later or check the service's health. I can retry whenever you want.

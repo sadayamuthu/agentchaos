@@ -1,0 +1,3 @@
+I couldn't get the plan or seat count for customer 4411. The CRM returned a truncated response both times, cutting off after the email field, so the name, plan and seats never arrived.
+
+The lookup itself works, so this is probably a transient truncation or a problem on the CRM side. I can retry again, or you can check the record directly in the CRM.

@@ -1,0 +1,3 @@
+I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times, cutting off after the email field, so the plan and seats fields never arrived.
+
+I don't have another CRM tool that could fill them in. The next step would be to check the CRM's own interface for customer 4411, or to ask whoever runs the CRM integration why the response is being cut short. If you can get the full record another way and paste it here, I can answer from that.

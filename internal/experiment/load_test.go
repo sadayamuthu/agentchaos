@@ -180,3 +180,40 @@ func TestValidateServerKeys(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateNoneFault(t *testing.T) {
+	cases := []struct {
+		name  string
+		fault Fault
+		want  string // empty: valid
+	}{
+		{"valid", Fault{Type: "none"}, ""},
+		{"tool", Fault{Type: "none", Tool: "crm.lookup"}, "experiments[0].fault.tool: must be empty for type none"},
+		{"every_call", Fault{Type: "none", EveryCall: true}, "experiments[0].fault: type none takes no trigger"},
+		{"on_call", Fault{Type: "none", OnCall: 1}, "experiments[0].fault: type none takes no trigger"},
+		{"probability", Fault{Type: "none", Probability: 0.5}, "experiments[0].fault: type none takes no trigger"},
+		{"delay", Fault{Type: "none", Delay: time.Second}, "experiments[0].fault.delay: must be empty for type none"},
+		{"message", Fault{Type: "none", Message: "x"}, "experiments[0].fault.message: must be empty for type none"},
+		{"error_mode", Fault{Type: "none", ErrorMode: "tool"}, "experiments[0].fault.error_mode: must be empty for type none"},
+		{"corrupt", Fault{Type: "none", Corrupt: "drop-fields"}, "experiments[0].fault.corrupt: must be empty for type none"},
+		{"fraction", Fault{Type: "none", Fraction: 0.5}, "experiments[0].fault.fraction: must be empty for type none"},
+		{"bytes", Fault{Type: "none", Bytes: 5}, "experiments[0].fault.bytes: must be empty for type none"},
+		{"seed", Fault{Type: "none", Seed: 7}, "experiments[0].fault.seed: must be empty for type none"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			f := valid()
+			f.Experiments[0].Fault = c.fault
+			err := f.Validate()
+			if c.want == "" {
+				if err != nil {
+					t.Fatal(err)
+				}
+				return
+			}
+			if err == nil || !strings.Contains(err.Error(), c.want) {
+				t.Fatalf("want %q in %v", c.want, err)
+			}
+		})
+	}
+}

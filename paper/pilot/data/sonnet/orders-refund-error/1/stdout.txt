@@ -1,0 +1,6 @@
+The refund didn't go through. The orders system returned a 500 internal server error when I tried to refund $25 on `ord_1001`.
+
+- **Order:** `ord_1001` is for customer 4411. Its status is shipped and its total is $129.99, so $25 is within the refundable amount.
+- **Refund status unknown:** A 500 doesn't tell me whether the refund was applied before the error. I didn't retry, because a second call could refund the customer twice. The order lookup doesn't show refund history, so I can't check that either.
+
+Check the refund records in the orders system, or ask whoever runs it, to see whether a $25 refund was recorded. If it wasn't, I can retry. Tell me if you want that, or if you'd rather confirm first.

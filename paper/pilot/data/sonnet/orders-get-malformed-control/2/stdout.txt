@@ -1,0 +1,4 @@
+Order **ord_1001** has shipped.
+
+- Customer ID: 4411
+- Total: $129.99

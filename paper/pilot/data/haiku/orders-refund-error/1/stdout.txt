@@ -1,0 +1,7 @@
+The $25 refund on ord_1001 did not go through. The orders system returned an internal server error (500), and I can't confirm whether any money moved.
+
+- **Order check:** ord_1001 belongs to customer 4411, has status `shipped`, and a total of $129.99. A $25 refund is within that total.
+- **Refund attempt:** `mcp__orders__refund` with order_id `ord_1001` and amount `25` returned `internal server error (500)`.
+- **Follow-up check:** I re-read the order. It still shows `shipped` and $129.99, but the order lookup doesn't include refund history, so that doesn't tell me whether the refund was applied.
+
+I didn't retry the refund. If the first attempt partly succeeded, a second one could refund the customer twice. Someone with access to the orders system's refund records should check whether a $25 refund for ord_1001 already exists. If none does, I can retry the refund once. Tell me if you want that, or if you'd rather check first.

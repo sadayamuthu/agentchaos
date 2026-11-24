@@ -1,0 +1,34 @@
+\begin{table}[t]
+\centering
+\caption{First failing check among failed runs, fault experiment vs. its control. Controls inject no fault.}
+\label{tab:rq2}
+\begin{tabular}{lllrrrr}
+\hline
+Model & Experiment & Arm & Valid & Fail & output\_matches & output\_not\_matches \\
+\hline
+haiku & crm.lookup timeout & fault & 10 & 0 & 0 & 0 \\
+haiku & crm.lookup timeout & control & 10 & 0 & 0 & 0 \\
+\hline
+haiku & crm.lookup partial & fault & 10 & 0 & 0 & 0 \\
+haiku & crm.lookup partial & control & 10 & 10 & 10 & 0 \\
+\hline
+haiku & orders.refund error & fault & 10 & 0 & 0 & 0 \\
+haiku & orders.refund error & control & 10 & 10 & 10 & 0 \\
+\hline
+haiku & orders.get malformed & fault & 10 & 0 & 0 & 0 \\
+haiku & orders.get malformed & control & 10 & 10 & 10 & 0 \\
+\hline
+sonnet & crm.lookup timeout & fault & 10 & 0 & 0 & 0 \\
+sonnet & crm.lookup timeout & control & 10 & 0 & 0 & 0 \\
+\hline
+sonnet & crm.lookup partial & fault & 10 & 0 & 0 & 0 \\
+sonnet & crm.lookup partial & control & 10 & 10 & 10 & 0 \\
+\hline
+sonnet & orders.refund error & fault & 10 & 1 & 0 & 1 \\
+sonnet & orders.refund error & control & 10 & 10 & 10 & 0 \\
+\hline
+sonnet & orders.get malformed & fault & 10 & 0 & 0 & 0 \\
+sonnet & orders.get malformed & control & 10 & 10 & 10 & 0 \\
+\hline
+\end{tabular}
+\end{table}

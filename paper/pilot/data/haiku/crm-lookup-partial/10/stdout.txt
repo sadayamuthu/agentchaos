@@ -1,0 +1,3 @@
+I couldn't get the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times, cutting off after the email field (`"email":"ada@example.com","na...`), so the subscription plan and number of seats never came through.
+
+The lookup tool is working and the customer exists, so this looks like a problem with the response itself rather than with the customer record. I can retry again, or you could check the record directly in the CRM.

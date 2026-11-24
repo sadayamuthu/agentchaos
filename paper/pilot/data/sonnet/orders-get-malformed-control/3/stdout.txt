@@ -1,0 +1,1 @@
+Order **ord_1001** has shipped. It belongs to customer 4411, and the total is $129.99.

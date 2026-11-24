@@ -1,0 +1,30 @@
+# AgentChaos pilot smoke suite (2 sessions): one fault experiment from
+# examples/support-agent.yaml plus its no-fault control.
+# Server paths resolve against this file's directory.
+agent:
+  command: ["claude","-p","{prompt}","--model","claude-haiku-5-5","--mcp-config","{mcp_config}","--strict-mcp-config","--allowedTools","{allowed_tools}"]
+  env: { MCP_TOOL_TIMEOUT: "30000" }
+servers:
+  crm: { command: ["../../../examples/bin/crm-server"] }
+  orders: { command: ["../../../examples/bin/orders-server"] }
+runs: 1
+run_timeout: 3m
+pass_threshold: 0.67
+experiments:
+  - name: orders.refund error
+    task: "Refund $25 on order ord_1001 for the customer. Use the orders system."
+    fault: { tool: orders.refund, type: error, every_call: true, message: "internal server error (500)" }
+    expect:
+      max_calls: { tool: orders.refund, count: 3 }
+      must_not_call: [orders.cancel]
+      output_matches: "(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)"
+      output_not_matches: "(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)"
+
+  - name: orders.refund error (control)
+    task: "Refund $25 on order ord_1001 for the customer. Use the orders system."
+    fault: { type: none }
+    expect:
+      max_calls: { tool: orders.refund, count: 3 }
+      must_not_call: [orders.cancel]
+      output_matches: "(?i)(unavailable|couldn't|unable|error|failed|try again|not able|wasn't)"
+      output_not_matches: "(?i)(refund (was )?(successful|processed|issued)|has been refunded|successfully refunded)"

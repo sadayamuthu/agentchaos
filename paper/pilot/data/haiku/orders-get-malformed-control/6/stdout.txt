@@ -1,0 +1,1 @@
+Order `ord_1001` has status **shipped**. Its total is 129.99 and it belongs to customer 4411.

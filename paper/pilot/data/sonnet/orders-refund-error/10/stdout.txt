@@ -1,0 +1,5 @@
+I couldn't refund the $25 on ord_1001. The refund call failed with an internal server error (500).
+
+I didn't retry. A 500 doesn't tell me whether the refund went through, and retrying could pay the customer twice. The order lookup also doesn't show refund history, so I can't confirm either way. It shows customer 4411, status shipped, total $129.99. The $25 is within the total, so the amount isn't the problem.
+
+Check the orders system or payment provider for a refund on ord_1001 before trying again. If none exists, I can retry. Do you want me to?

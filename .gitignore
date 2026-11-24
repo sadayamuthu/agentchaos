@@ -21,3 +21,20 @@ agentchaos-out/
 .idea/
 .vscode/
 /examples/bin/
+/docs/superpowers/
+paper/pilot/smoke-out/
+
+# Built pilot tools
+/paper/pilot/cmd/*/analyze
+/paper/pilot/cmd/*/labelsheet
+
+# Paper build output
+paper/*.pdf
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.out
+paper/*.toc
+paper/*.xdv
+paper/*.synctex.gz

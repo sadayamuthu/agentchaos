@@ -1,0 +1,7 @@
+I couldn't get customer 4411's plan or seat count. The CRM lookup returned a truncated response both times I ran it. This is all it returned:
+
+`{"customer_id":4411,"email":"ada@example.com","na`
+
+The output stops partway through the name field, before the plan and seats. I'd rather not guess at values I haven't seen.
+
+This looks like a problem on the CRM tool or server side, not with the customer ID. You could try again later, or check the CRM directly. If you can get the full record from another source, I can help read it.
