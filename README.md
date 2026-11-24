@@ -144,7 +144,7 @@ The plan, from the first working version to 1.0, is in [ROADMAP.md](ROADMAP.md).
 
 ## Built on switchyard
 
-`agentchaos` is a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → agentfuse → agentlock → agenttaint → agentrewind → MCP server`).
+`agentchaos` is a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → agentfuse → agentlock → agenttaint → agentrewind → agentbox → MCP server`).
 
 ---
 
