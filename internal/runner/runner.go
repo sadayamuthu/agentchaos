@@ -238,6 +238,9 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		res.Status, res.Reason = StatusError, ReasonCancelled
 		return res
 	}
+	// A none fault is a control: nothing is injected, so there is no fault
+	// to trigger and the server is unavailable only if none answered.
+	control := exp.Fault.Type == "none"
 	calls, faulted := 0, false
 	for _, e := range events {
 		if e.Kind == switchyard.KindRequest && e.Method == "tools/call" {
@@ -255,13 +258,21 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		res.Status, res.Reason = StatusError, ReasonAgentError
 	case ar.timedOut:
 		res.Status, res.Reason = StatusFail, ReasonDidNotFinish
-	case !faulted && !answered[exp.Fault.Server()]:
+	case control && len(answered) == 0:
+		// No server answered anything: they most likely failed to start.
+		res.Status, res.Reason = StatusInvalid, ReasonServerUnavailable
+		var details []string
+		for _, srv := range servers {
+			details = append(details, serverDetail(proxyLog(dir, srv), srv))
+		}
+		res.Checks = append([]grade.Check{{Name: "server", Pass: false, Detail: strings.Join(details, "\n")}}, res.Checks...)
+	case !control && !faulted && !answered[exp.Fault.Server()]:
 		// The fault's server never answered anything: it most likely
 		// failed to start, which says nothing about the agent.
 		srv := exp.Fault.Server()
 		res.Status, res.Reason = StatusInvalid, ReasonServerUnavailable
 		res.Checks = append([]grade.Check{{Name: "server", Pass: false, Detail: serverDetail(proxyLog(dir, srv), srv)}}, res.Checks...)
-	case !faulted:
+	case !control && !faulted:
 		res.Status, res.Reason = StatusInvalid, ReasonFaultNotTriggered
 	default:
 		res.Status = StatusPass

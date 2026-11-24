@@ -426,3 +426,30 @@ func TestRunServerNeverStarted(t *testing.T) {
 		t.Fatalf("server check detail %q", d)
 	}
 }
+
+func TestRunNoneFaultPassesOnChecks(t *testing.T) {
+	r := one(t, runFile(t, fake("--call", "crm.lookup", "--on-failure", "report"), "run_timeout: 30s", `  - name: control
+    task: look up the account
+    fault: {type: none}
+    expect:
+      must_call: [crm.lookup]
+`))
+	if r.Status != "pass" || r.Reason != "" {
+		t.Fatalf("status %s/%s, want pass: %+v", r.Status, r.Reason, r)
+	}
+}
+
+func TestRunNoneFaultServerUnavailable(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--on-failure", "report"), "", "run_timeout: 30s", `  - name: control
+    task: look up the account
+    fault: {type: none}
+`)
+	r.File.Servers["crm"] = experiment.Server{Command: []string{"/bin/sh", "-c", "echo boom >&2; exit 1"}}
+	res := one(t, r.RunAll(context.Background()))
+	if res.Status != "invalid" || res.Reason != "server-unavailable" {
+		t.Fatalf("status %s/%s, want invalid/server-unavailable: %+v", res.Status, res.Reason, res)
+	}
+	if d := checkDetail(t, res, "server"); !strings.Contains(d, "boom") {
+		t.Fatalf("server check detail %q does not contain the server's stderr", d)
+	}
+}

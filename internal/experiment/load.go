@@ -17,7 +17,7 @@ import (
 // serverKey is the form of a server key.
 var serverKey = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
 
-var faultTypes = map[string]bool{"timeout": true, "slow": true, "error": true, "partial": true, "malformed": true}
+var faultTypes = map[string]bool{"timeout": true, "slow": true, "error": true, "partial": true, "malformed": true, "none": true}
 
 // Load reads, defaults, path-resolves and validates an experiment file.
 // It does not check that the commands exist.
@@ -58,6 +58,9 @@ func Parse(path string, data []byte) (*File, error) {
 func applyDefaults(f *File) {
 	for i := range f.Experiments {
 		ft := &f.Experiments[i].Fault
+		if ft.Type == "none" {
+			continue // takes no fault options; Validate rejects any set
+		}
 		if ft.ErrorMode == "" {
 			ft.ErrorMode = "tool"
 		}
@@ -150,45 +153,67 @@ func (f *File) Validate() error {
 		}
 
 		ft := e.Fault
-		toolRef(p+".fault.tool", ft.Tool)
-		if !faultTypes[ft.Type] {
-			add("%s.fault.type: unknown type %q (want timeout, slow, error, partial or malformed)", p, ft.Type)
-		}
-		triggers := 0
-		if ft.OnCall > 0 {
-			triggers++
-		}
-		if ft.EveryCall {
-			triggers++
-		}
-		if ft.Probability != 0 {
-			triggers++
-			if ft.Probability <= 0 || ft.Probability > 1 {
-				add("%s.fault.probability: must be in (0,1], got %v", p, ft.Probability)
+		if ft.Type == "none" {
+			// A control: nothing is injected, so nothing may configure a fault.
+			if ft.Tool != "" {
+				add("%s.fault.tool: must be empty for type none", p)
 			}
-		}
-		if ft.OnCall < 0 {
-			add("%s.fault.on_call: must be >= 1, got %d", p, ft.OnCall)
-		}
-		if triggers != 1 {
-			add("%s.fault: exactly one trigger of on_call, every_call, probability is required, got %d", p, triggers)
-		}
-		if ft.Type == "slow" && ft.Delay <= 0 {
-			add("%s.fault.delay: required (> 0) for type slow", p)
-		}
-		if ft.ErrorMode != "" && ft.ErrorMode != "tool" && ft.ErrorMode != "jsonrpc" {
-			add("%s.fault.error_mode: unknown mode %q (want tool or jsonrpc)", p, ft.ErrorMode)
-		}
-		switch ft.Corrupt {
-		case "", "invalid-json", "drop-fields", "wrong-types":
-		default:
-			add("%s.fault.corrupt: unknown mode %q (want invalid-json, drop-fields or wrong-types)", p, ft.Corrupt)
-		}
-		if ft.Fraction < 0 || ft.Fraction > 1 {
-			add("%s.fault.fraction: must be in [0,1], got %v", p, ft.Fraction)
-		}
-		if ft.Bytes < 0 {
-			add("%s.fault.bytes: must be >= 0, got %d", p, ft.Bytes)
+			if ft.OnCall != 0 || ft.EveryCall || ft.Probability != 0 {
+				add("%s.fault: type none takes no trigger", p)
+			}
+			for _, o := range []struct {
+				name string
+				set  bool
+			}{
+				{"seed", ft.Seed != 0}, {"delay", ft.Delay != 0}, {"error_mode", ft.ErrorMode != ""},
+				{"message", ft.Message != ""}, {"fraction", ft.Fraction != 0},
+				{"bytes", ft.Bytes != 0}, {"corrupt", ft.Corrupt != ""},
+			} {
+				if o.set {
+					add("%s.fault.%s: must be empty for type none", p, o.name)
+				}
+			}
+		} else {
+			toolRef(p+".fault.tool", ft.Tool)
+			if !faultTypes[ft.Type] {
+				add("%s.fault.type: unknown type %q (want timeout, slow, error, partial, malformed or none)", p, ft.Type)
+			}
+			triggers := 0
+			if ft.OnCall > 0 {
+				triggers++
+			}
+			if ft.EveryCall {
+				triggers++
+			}
+			if ft.Probability != 0 {
+				triggers++
+				if ft.Probability <= 0 || ft.Probability > 1 {
+					add("%s.fault.probability: must be in (0,1], got %v", p, ft.Probability)
+				}
+			}
+			if ft.OnCall < 0 {
+				add("%s.fault.on_call: must be >= 1, got %d", p, ft.OnCall)
+			}
+			if triggers != 1 {
+				add("%s.fault: exactly one trigger of on_call, every_call, probability is required, got %d", p, triggers)
+			}
+			if ft.Type == "slow" && ft.Delay <= 0 {
+				add("%s.fault.delay: required (> 0) for type slow", p)
+			}
+			if ft.ErrorMode != "" && ft.ErrorMode != "tool" && ft.ErrorMode != "jsonrpc" {
+				add("%s.fault.error_mode: unknown mode %q (want tool or jsonrpc)", p, ft.ErrorMode)
+			}
+			switch ft.Corrupt {
+			case "", "invalid-json", "drop-fields", "wrong-types":
+			default:
+				add("%s.fault.corrupt: unknown mode %q (want invalid-json, drop-fields or wrong-types)", p, ft.Corrupt)
+			}
+			if ft.Fraction < 0 || ft.Fraction > 1 {
+				add("%s.fault.fraction: must be in [0,1], got %v", p, ft.Fraction)
+			}
+			if ft.Bytes < 0 {
+				add("%s.fault.bytes: must be >= 0, got %d", p, ft.Bytes)
+			}
 		}
 
 		ex := e.Expect

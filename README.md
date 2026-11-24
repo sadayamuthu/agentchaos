@@ -73,6 +73,7 @@ distributed systems; agents need the same discipline.
    - `timeout`, `slow`, `error`: the tool hangs, lags or fails
    - `partial`: truncated or paginated-away results
    - `malformed`: invalid JSON, wrong types, empty fields
+   - `none`: a control: no fault, same checks
    - `poisoned`: tool output containing instructions or false data
    - `stale`: old data returned as current
    - `rogue-peer`: another agent sends wrong or adversarial messages

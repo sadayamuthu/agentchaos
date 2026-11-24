@@ -86,7 +86,9 @@ faults from.
 
 Copy `support-agent.yaml`. Each experiment names a `task` (the prompt), one
 `fault` on a `<server>.<tool>`, and `expect` checks. v0 faults are `timeout`,
-`slow`, `error`, `partial` and `malformed`. Unknown YAML keys are errors.
+`slow`, `error`, `partial` and `malformed`. `type: none` is a control: no
+fault, same checks. It takes no `tool` or trigger, and passes through every
+server. Unknown YAML keys are errors.
 Server keys may use ASCII letters, digits, `_` and `-`.
 
 `expect.backoff` checks that the gaps between three or more identical calls
