@@ -1,0 +1,20 @@
+agent:
+  preset: claude-code
+servers:
+  crm: { command: ["./crm-server"] }
+  orders: { command: ["./orders-server"] }
+runs: 5
+experiments:
+  - name: crm.lookup timeout
+    task: "What plan is customer 4411 on?"
+    fault: { tool: crm.lookup, type: timeout, on_call: 1 }
+    expect:
+      max_calls: { tool: crm.lookup, count: 4 }
+      backoff: true
+      output_matches: "(unavailable|couldn't|unable)"
+  - name: orders.refund error
+    task: "Refund order 4411"
+    fault: { tool: orders.refund, type: error, every_call: true }
+    expect:
+      max_calls: { tool: orders.refund, count: 3 }
+      must_not_call: [orders.cancel]
