@@ -21,8 +21,8 @@ agentchaos-out/
 .idea/
 .vscode/
 /examples/bin/
-/docs/superpowers/
 
-# Local-only working files (paper, superpowers)
-/paper/
+# Local-only working files (never committed)
+/docs/superpowers/
 /.superpowers/
+/paper/
