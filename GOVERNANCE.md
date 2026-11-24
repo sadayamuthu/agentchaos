@@ -17,7 +17,8 @@ so that new maintainers can join without changing the rules.
 
 **Users** use AgentChaos and report what works and what doesn't. Issues,
 discussions and real-world feedback are contributions. While the project is
-at the design stage, feedback on the design is the most valuable kind.
+pre-1.0, feedback from running it against real agents is the most valuable
+kind.
 
 **Contributors** have had at least one pull request merged, or have made
 other sustained contributions (triage, documentation, design review).
@@ -75,10 +76,12 @@ records the reason in the issue or pull request.
 
 ## Releases
 
-Releases are cut by maintainers by pushing a `vX.Y.Z` tag on `main`. CI
-builds the binaries, attaches them to a GitHub release, and updates the
-formula in [sadayamuthu/homebrew-tap](https://github.com/sadayamuthu/homebrew-tap).
-There are no releases yet.
+Releases are cut by maintainers by pushing a `vX.Y.Z` tag on `main` and
+publishing a GitHub release. Users install a release with
+`go install github.com/sadayamuthu/agentchaos/cmd/agentchaos@vX.Y.Z`. Prebuilt
+binaries and a formula in
+[sadayamuthu/homebrew-tap](https://github.com/sadayamuthu/homebrew-tap) are
+planned.
 
 ## Code of conduct
 

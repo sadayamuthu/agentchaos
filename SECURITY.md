@@ -21,8 +21,8 @@ rather it didn't.
 
 ## Supported versions
 
-AgentChaos is at the design stage and has no releases yet. Once it does,
-fixes land in the latest release only, until 1.0.
+AgentChaos is pre-1.0. Fixes land in the latest release only; please upgrade
+before reporting.
 
 ## What counts
 

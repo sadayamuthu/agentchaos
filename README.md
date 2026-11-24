@@ -4,7 +4,8 @@
 
 <h3>Chaos engineering for AI agents</h3>
 
-[![Status](https://img.shields.io/badge/status-v0%20in%20development-yellow?style=flat-square)](ROADMAP.md)
+[![Status](https://img.shields.io/badge/status-v0.1.0-yellow?style=flat-square)](ROADMAP.md)
+[![Go Reference](https://pkg.go.dev/badge/github.com/sadayamuthu/agentchaos.svg)](https://pkg.go.dev/github.com/sadayamuthu/agentchaos/cmd/agentchaos)
 [![Go 1.26+](https://img.shields.io/badge/go-1.26+-00ADD8?style=flat-square)](https://go.dev/dl/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square)](LICENSE)
 
@@ -24,8 +25,9 @@ poisoned tool outputs, a peer agent that misbehaves) and reports how the agent
 fails: safely, by retrying forever, by making things up to fill the gap, or by
 passing the failure on to other agents.
 
-> **Status: v0 in development.** The MCP proxy, the experiment format and the
-> `run` command work, but formats and flags may still change. The full example
+> **Status: v0.1.0, early release.** The MCP proxy, the experiment format and
+> the `run` command work and are tested, but formats and flags may still change
+> before 1.0. The full example
 > below is the proposal, not what v0 prints today. Part of
 > the [OpenAstra](https://openastra.org) research agenda, area X: AI
 > Resilience & Recovery.
@@ -34,8 +36,15 @@ passing the failure on to other agents.
 
 ## Try it
 
-Needs Go 1.26 and Claude Code, logged in. This runs real Claude Code and uses
-API credits. See [examples/README.md](examples/README.md) for the walkthrough.
+Install the CLI:
+
+```sh
+go install github.com/sadayamuthu/agentchaos/cmd/agentchaos@latest
+```
+
+To run the example suite, clone the repo; you need Go 1.26 and Claude Code,
+logged in. This runs real Claude Code and uses API credits. See
+[examples/README.md](examples/README.md) for the walkthrough.
 
 ```sh
 go build -o examples/bin/agentchaos ./cmd/agentchaos
