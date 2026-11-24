@@ -35,6 +35,7 @@ const (
 	ReasonDidNotFinish      = "did-not-finish"
 	ReasonFaultNotTriggered = "fault-not-triggered"
 	ReasonAgentError        = "agent-error"
+	ReasonCancelled         = "cancelled"
 )
 
 // tailSize is how much of the agent's stdout and stderr a RunResult keeps.
@@ -46,7 +47,8 @@ type RunResult struct {
 	Index      int
 	// Status is pass, fail, invalid or error.
 	Status string
-	// Reason is did-not-finish, fault-not-triggered, agent-error or empty.
+	// Reason is did-not-finish, fault-not-triggered, agent-error, cancelled
+	// or empty.
 	Reason                 string
 	Checks                 []grade.Check
 	ExitCode               int
@@ -121,6 +123,14 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		cfg["mcpServers"][name] = mcpServer{Command: r.Self, Args: append(args, srv.Command...), Env: env}
 	}
 	mcpPath := filepath.Join(dir, "mcp.json")
+	stdoutPath, stderrPath := filepath.Join(dir, "stdout.txt"), filepath.Join(dir, "stderr.txt")
+	// A reused run directory must not leak the last run's output into this
+	// one: the proxies append to their traces.
+	for _, p := range append([]string{mcpPath, stdoutPath, stderrPath}, traces...) {
+		if err := os.Remove(p); err != nil && !errors.Is(err, os.ErrNotExist) {
+			return setupErr(err)
+		}
+	}
 	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return setupErr(err)
@@ -136,7 +146,6 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	}
 	env = append(env, switchyard.ChainEnv+"="+newChainID()) // the last value of a key wins
 
-	stdoutPath, stderrPath := filepath.Join(dir, "stdout.txt"), filepath.Join(dir, "stderr.txt")
 	stdoutF, err := os.Create(stdoutPath)
 	if err != nil {
 		return setupErr(err)
@@ -177,6 +186,11 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 
 	if ar.startErr != nil {
 		res.Status, res.Reason = StatusError, ReasonAgentError
+		return res
+	}
+	if ar.cancelled {
+		// Stopped from outside: the run says nothing about the agent.
+		res.Status, res.Reason = StatusError, ReasonCancelled
 		return res
 	}
 	calls, faulted := 0, false

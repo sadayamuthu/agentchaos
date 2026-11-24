@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
+	"syscall"
 	"testing"
 	"time"
 
@@ -50,13 +51,18 @@ func fake(extra ...string) string {
 	return "[" + strings.Join(q, ", ") + "]"
 }
 
-// runFile writes an experiment file whose agent is agentCmd and whose crm
-// server is the testserver, with the given top-level settings and
-// experiments block, then runs it.
-func runFile(t *testing.T, agentCmd, settings, experiments string) []runner.RunResult {
+// newRunner writes an experiment file whose agent is agentCmd and whose crm
+// server is the testserver (with serverEnv as its YAML env mapping, if not
+// empty), with the given top-level settings and experiments block, and
+// returns a Runner for it.
+func newRunner(t *testing.T, agentCmd, serverEnv, settings, experiments string) *runner.Runner {
 	t.Helper()
 	dir := t.TempDir()
-	body := fmt.Sprintf("agent: {command: %s}\nservers:\n  crm: {command: [%q]}\n%s\nexperiments:\n%s", agentCmd, testserverBin, settings, experiments)
+	srv := fmt.Sprintf("{command: [%q]}", testserverBin)
+	if serverEnv != "" {
+		srv = fmt.Sprintf("{command: [%q], env: %s}", testserverBin, serverEnv)
+	}
+	body := fmt.Sprintf("agent: {command: %s}\nservers:\n  crm: %s\n%s\nexperiments:\n%s", agentCmd, srv, settings, experiments)
 	p := filepath.Join(dir, "exp.yaml")
 	if err := os.WriteFile(p, []byte(body), 0o644); err != nil {
 		t.Fatal(err)
@@ -65,8 +71,13 @@ func runFile(t *testing.T, agentCmd, settings, experiments string) []runner.RunR
 	if err != nil {
 		t.Fatal(err)
 	}
-	r := &runner.Runner{File: f, Self: agentchaosBin, WorkDir: filepath.Join(dir, "work")}
-	return r.RunAll(context.Background())
+	return &runner.Runner{File: f, Self: agentchaosBin, WorkDir: filepath.Join(dir, "work")}
+}
+
+// runFile runs newRunner's experiments.
+func runFile(t *testing.T, agentCmd, settings, experiments string) []runner.RunResult {
+	t.Helper()
+	return newRunner(t, agentCmd, "", settings, experiments).RunAll(context.Background())
 }
 
 func one(t *testing.T, rs []runner.RunResult) runner.RunResult {
@@ -287,5 +298,96 @@ func TestBuildArgvCommand(t *testing.T) {
 	}
 	if !reflect.DeepEqual(env, map[string]string{"K": "v"}) {
 		t.Fatalf("env %v", env)
+	}
+}
+
+func TestRunReusedWorkDir(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--max-attempts", "5", "--backoff", "none", "--on-failure", "report"), "", "run_timeout: 30s", errorExperiment)
+	for i := 0; i < 2; i++ {
+		res := one(t, r.RunAll(context.Background()))
+		if res.Status != "fail" || res.Reason != "" {
+			t.Fatalf("pass %d: status %s/%s, want fail: %+v", i+1, res.Status, res.Reason, res)
+		}
+		if d := checkDetail(t, res, "max_calls"); d != "called 5 times, max 3" {
+			t.Fatalf("pass %d: max_calls detail %q", i+1, d)
+		}
+		if strings.Count(res.StdoutTail, "unable to complete") != 1 {
+			t.Fatalf("pass %d: stdout %q", i+1, res.StdoutTail)
+		}
+	}
+}
+
+func TestRunCancelled(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--on-failure", "hang"), "", "run_timeout: 30s", `  - name: hang
+    task: look up the account
+    fault: {tool: crm.lookup, type: error, every_call: true}
+  - name: never
+    task: look up the account
+    fault: {tool: crm.lookup, type: error, every_call: true}
+`)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	trace := filepath.Join(r.WorkDir, "hang", "1", "trace-crm.jsonl")
+	go func() {
+		// Cancel once the agent has made a call (its trace has a response).
+		for ctx.Err() == nil {
+			if b, _ := os.ReadFile(trace); strings.Contains(string(b), `"kind":"response"`) {
+				cancel()
+				return
+			}
+			time.Sleep(10 * time.Millisecond)
+		}
+	}()
+	start := time.Now()
+	rs := r.RunAll(ctx)
+	if d := time.Since(start); d > 10*time.Second {
+		t.Fatalf("took %v", d)
+	}
+	res := one(t, rs)
+	if res.Status != "error" || res.Reason != "cancelled" {
+		t.Fatalf("status %s/%s, want error/cancelled: %+v", res.Status, res.Reason, res)
+	}
+}
+
+func TestRunTimeoutKillsGrandchildren(t *testing.T) {
+	// The proxy the agent starts runs a shell that leaves a sleep behind
+	// (which no stdin EOF or proxy shutdown would stop) and then becomes the
+	// testserver, which writes its own pid. Both are in the agent's process
+	// group, so the kill at the wall-clock limit must reach them.
+	r := newRunner(t, fake("--call", "crm.lookup", "--on-failure", "hang"), "", "run_timeout: 2s", `  - name: hang
+    task: look up the account
+    fault: {tool: crm.lookup, type: timeout, every_call: true}
+`)
+	runDir := filepath.Join(r.WorkDir, "hang", "1")
+	serverPID, sleepPID := filepath.Join(runDir, "server.pid"), filepath.Join(runDir, "sleep.pid")
+	r.File.Servers["crm"] = experiment.Server{
+		Command: []string{"/bin/sh", "-c", `sleep 300 </dev/null >/dev/null 2>&1 & echo $! > "$SLEEP_PIDFILE"; exec "$0"`, testserverBin},
+		Env:     map[string]string{"TESTSERVER_PIDFILE": serverPID, "SLEEP_PIDFILE": sleepPID},
+	}
+	res := one(t, r.RunAll(context.Background()))
+	if res.Status != "fail" || res.Reason != "did-not-finish" {
+		t.Fatalf("status %s/%s: %+v", res.Status, res.Reason, res)
+	}
+	for _, f := range []string{serverPID, sleepPID} {
+		b, err := os.ReadFile(f)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var pid int
+		if _, err := fmt.Sscan(string(b), &pid); err != nil || pid <= 0 {
+			t.Fatalf("%s: %q: %v", f, b, err)
+		}
+		deadline := time.Now().Add(2 * time.Second)
+		for {
+			err := syscall.Kill(pid, 0)
+			if err == syscall.ESRCH {
+				break
+			}
+			if time.Now().After(deadline) {
+				_ = syscall.Kill(pid, syscall.SIGKILL)
+				t.Fatalf("pid %d from %s still exists after the run: kill(pid, 0) = %v", pid, filepath.Base(f), err)
+			}
+			time.Sleep(20 * time.Millisecond)
+		}
 	}
 }

@@ -59,6 +59,9 @@ type agentRun struct {
 	startErr error
 	exitCode int
 	timedOut bool
+	// cancelled is set when the parent ctx was done before the agent was
+	// reaped.
+	cancelled bool
 }
 
 // runAgent runs argv in its own process group with cwd dir, environment env
@@ -88,8 +91,9 @@ func runAgent(ctx context.Context, argv []string, dir string, env []string, stdo
 	// Kill stragglers (MCP proxies and servers the agent left behind).
 	_ = killGroup(pgid)
 	return agentRun{
-		exitCode: cmd.ProcessState.ExitCode(),
-		timedOut: errors.Is(runCtx.Err(), context.DeadlineExceeded) && ctx.Err() == nil,
+		exitCode:  cmd.ProcessState.ExitCode(),
+		timedOut:  errors.Is(runCtx.Err(), context.DeadlineExceeded) && ctx.Err() == nil,
+		cancelled: ctx.Err() != nil,
 	}
 }
 
