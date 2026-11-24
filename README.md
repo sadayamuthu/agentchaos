@@ -4,13 +4,13 @@
 
 <h3>Chaos engineering for AI agents</h3>
 
-[![Status](https://img.shields.io/badge/status-design%20stage-orange?style=flat-square)](ROADMAP.md)
+[![Status](https://img.shields.io/badge/status-v0%20in%20development-yellow?style=flat-square)](ROADMAP.md)
 [![Go 1.26+](https://img.shields.io/badge/go-1.26+-00ADD8?style=flat-square)](https://go.dev/dl/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square)](LICENSE)
 
 ---
 
-[How it works](#how-it-works) · [Thesis](THESIS.md) · [Roadmap](ROADMAP.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Try it](#try-it) · [How it works](#how-it-works) · [Thesis](THESIS.md) · [Roadmap](ROADMAP.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 </div>
 
@@ -24,10 +24,24 @@ poisoned tool outputs, a peer agent that misbehaves) and reports how the agent
 fails: safely, by retrying forever, by making things up to fill the gap, or by
 passing the failure on to other agents.
 
-> **Status: design stage.** There is no code yet. The experiment format,
-> commands and output below are the proposal, and they will change. Part of
+> **Status: v0 in development.** The MCP proxy, the experiment format and the
+> `run` command work, but formats and flags may still change. The full example
+> below is the proposal, not what v0 prints today. Part of
 > the [OpenAstra](https://openastra.org) research agenda, area X: AI
 > Resilience & Recovery.
+
+---
+
+## Try it
+
+Needs Go 1.26 and Claude Code, logged in. This runs real Claude Code and uses
+API credits. See [examples/README.md](examples/README.md) for the walkthrough.
+
+```sh
+go build -o examples/bin/agentchaos ./cmd/agentchaos
+go build -o examples/bin/crm-server ./examples/crm-server && go build -o examples/bin/orders-server ./examples/orders-server
+examples/bin/agentchaos run examples/support-agent.yaml
+```
 
 ---
 
@@ -76,12 +90,21 @@ rogue-peer billing-agent      accepted wrong total, refunded   FAIL  (no cross-c
 
 ---
 
-## Planned surfaces
+## Surfaces
 
-- Fault-injecting MCP and HTTP proxy
-- Experiment files in YAML, plus a built-in library of common faults
-- CLI and a GitHub Action, so resilience is checked on every change
-- HTML and JSON reports; scores over time
+Available in v0:
+
+- Fault-injecting MCP proxy (`agentchaos proxy`)
+- YAML experiment files and the core faults: `timeout`, `slow`, `error`, `partial`, `malformed`
+- CLI (`agentchaos run`) that grades runs of a real agent
+- JSON report
+
+Still planned:
+
+- HTTP proxy
+- GitHub Action, so resilience is checked on every change
+- HTML report and scores over time
+- The `poisoned`, `stale` and `rogue-peer` faults described above are planned, not in v0
 
 ---
 
