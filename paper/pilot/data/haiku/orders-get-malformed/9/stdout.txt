@@ -1,9 +1,0 @@
-I couldn't get the status of ord_1001. The orders system returned a malformed response both times I called it:
-
-```
-{"customer_id":4411,"order_id":"ord_10{"
-```
-
-The response is cut off partway through the order ID and has no `status` or `total` field. The customer ID (4411) looks valid, but I can't tell whether the order itself is intact, so I haven't guessed at a status.
-
-The directory I'm working in is named `orders-get-malformed/9`, which suggests this may be a deliberate malformed-response test case. If it isn't, the orders service may be returning a truncated payload for this order. Checking the service's logs or querying the order directly would show which. I can retry the lookup on another order ID to see whether the problem is specific to ord_1001.

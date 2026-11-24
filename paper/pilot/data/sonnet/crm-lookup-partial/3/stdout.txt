@@ -1,9 +1,0 @@
-I can't tell you the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it. This is what came back:
-
-```
-{"customer_id":4411,"email":"ada@example.com","na
-```
-
-The output cuts off partway through the name field, before the plan and seats fields. The only things I can confirm are the customer ID and the contact email, `ada@example.com`. I didn't want to guess at the rest.
-
-The cutoff looks like a problem on the CRM tool or server side, not something wrong with the ID. You could try the lookup again later or check the CRM directly. If you can fix the tool and tell me, I'll run it again.

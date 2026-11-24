@@ -1,9 +1,0 @@
-I couldn't get the status of ord_1001. The orders system returned the same cut-off response on two tries:
-
-```
-{"customer_id":4411,"order_id":"ord_10{"
-```
-
-The only usable field is `customer_id`, which is 4411. The `order_id` value is cut off, and the total and status fields are missing. I won't guess a status from this.
-
-The problem is probably in the orders service or the MCP server, not in your request. You could check that service's health or logs, or ask me to try again later. I can also look up customer 4411 in the CRM, but that wouldn't give the order status.

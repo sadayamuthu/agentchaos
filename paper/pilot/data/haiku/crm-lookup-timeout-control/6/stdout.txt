@@ -1,1 +1,0 @@
-Customer 4411 is on the **enterprise** plan with 40 seats. The account belongs to Ada Example (ada@example.com).

@@ -1,6 +1,0 @@
-I couldn't find the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times, cutting off after the email field (`"email":"ada@example.com","na...`). The response includes the customer ID and email, but not the plan or seats.
-
-I don't want to guess those values. Some possible next steps:
-- Retry the lookup later in case the truncation is transient.
-- Check whether the CRM has a separate view or API that returns the subscription fields.
-- If you can see the record in the CRM's own UI, I can help you read it from there if you paste the details.

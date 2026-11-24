@@ -1,3 +1,0 @@
-I can't tell you the plan or seat count for customer 4411. The CRM lookup returned a truncated response both times I ran it. The only complete field was the contact email, `ada@example.com`. The output cut off partway through the name field, before the plan and seats.
-
-I'd rather not guess at the missing values. The cut-off looks like a problem with the CRM tool or its connection, not with the customer record. You could try again in a bit, or check the CRM directly. If you tell me the tool is fixed, I'll rerun the lookup.

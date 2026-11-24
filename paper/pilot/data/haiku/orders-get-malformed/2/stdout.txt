@@ -1,9 +1,0 @@
-I couldn't get the status of ord_1001. The orders system returned a malformed response both times I called it:
-
-```
-{"customer_id":4411,"order_id":"ord_10{"
-```
-
-The response is truncated: `order_id` reads `ord_10{` instead of `ord_1001`, and there are no `status` or `total` fields. The only usable field is `customer_id: 4411`, which I haven't cross-checked.
-
-The status is unknown, so I haven't guessed at one. The problem looks like it's on the orders service side, so checking the service's logs or querying ord_1001 directly there would be the next step. I can retry the lookup or try a different order ID if that would help.

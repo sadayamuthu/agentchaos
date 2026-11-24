@@ -1,6 +1,0 @@
-I couldn't get customer 4411's plan or seat count from the CRM. Both lookups returned the same truncated response: the customer ID and email (`ada@example.com`) came back, but the output stopped partway through the name field, before the plan and seats.
-
-This looks like a problem with the CRM tool's response rather than with the customer record, since a retry returned the identical cut-off text. Possible next steps:
-
-- Check whether the `mcp__crm__lookup` server is returning truncated output, or whether its response size limit is too small for this record.
-- If you can see the record in the CRM's own interface, I can work from that if you paste the plan and seat count.

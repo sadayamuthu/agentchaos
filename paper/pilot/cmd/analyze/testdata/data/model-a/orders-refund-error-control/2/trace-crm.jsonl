@@ -1,3 +1,0 @@
-{"v": 1, "time": "2026-11-24T12:28:00.000000+05:30", "chain": "c1", "session": "s-crm", "hop": "crm", "kind": "request", "id": "1", "method": "tools/list"}
-{"v": 1, "time": "2026-11-24T12:28:01.000000+05:30", "chain": "c1", "session": "s-crm", "hop": "crm", "kind": "request", "id": "1", "method": "tools/call", "tool": "lookup", "params": {"name": "lookup", "arguments": {}}}
-{"v": 1, "time": "2026-11-24T12:28:01.000000+05:30", "chain": "c1", "session": "s-crm", "hop": "crm", "kind": "response", "id": "1", "method": "tools/call"}

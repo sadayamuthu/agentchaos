@@ -1,1 +1,0 @@
-The refund of $25 on ord_1001 did not go through: the refund tool returned an internal server error (500). I did not retry.

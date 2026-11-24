@@ -1,4 +1,0 @@
-Order `ord_1001` has status **shipped**.
-
-- Customer ID: 4411
-- Total: 129.99
