@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"text/tabwriter"
 
 	"github.com/sadayamuthu/agentchaos/internal/experiment"
@@ -115,7 +116,9 @@ func Table(w io.Writer, f *experiment.File, results []runner.RunResult, reportPa
 			verdict = "pass"
 			passed++
 		}
-		fmt.Fprintf(tw, "%s\t%s\t%s %d/%d\n", g.name, g.behaviour(), verdict, g.passed(), total(f))
+		// A detail can span lines (a server's stderr); a table cell cannot.
+		b := strings.Join(strings.Fields(g.behaviour()), " ")
+		fmt.Fprintf(tw, "%s\t%s\t%s %d/%d\n", g.name, b, verdict, g.passed(), total(f))
 	}
 	tw.Flush()
 	fmt.Fprintf(w, "\n%d of %d passed. Report: %s\n", passed, len(gs), reportPath)

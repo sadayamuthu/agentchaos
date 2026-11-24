@@ -17,7 +17,7 @@ import (
 	"github.com/sadayamuthu/agentchaos/internal/faults"
 )
 
-const usage = "usage: agentchaos proxy --experiment FILE --name EXPERIMENT --server SERVER [--trace FILE] -- <cmd> [args...]"
+const usage = "usage: agentchaos proxy --experiment FILE --name EXPERIMENT --server SERVER [--trace FILE] [--log FILE] -- <cmd> [args...]"
 
 // eofReader records that the wrapped reader reached EOF.
 type eofReader struct {
@@ -47,11 +47,27 @@ func Run(ctx context.Context, args []string, stdin io.Reader, stdout, stderr io.
 	name := fs.String("name", "", "name of the experiment in FILE")
 	server := fs.String("server", "", "key of the server this proxy fronts")
 	trace := fs.String("trace", "", "append JSONL trace events to `FILE`")
+	logPath := fs.String("log", "", "append the proxy's diagnostics and the upstream's stderr to `FILE`")
 	if err := fs.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
 			return 0
 		}
 		return 2
+	}
+	if *logPath != "" {
+		lf, err := os.OpenFile(*logPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o644)
+		if err != nil {
+			fmt.Fprintln(stderr, "agentchaos proxy:", err)
+			return 1
+		}
+		defer lf.Close()
+		stderr = lf
+		// switchyard.RunCommand gives the upstream this process's
+		// os.Stderr, so pointing it at the log captures the server's
+		// stderr too.
+		prev := os.Stderr
+		os.Stderr = lf
+		defer func() { os.Stderr = prev }()
 	}
 	if *expPath == "" || *name == "" || *server == "" {
 		fmt.Fprintln(stderr, "agentchaos proxy: --experiment, --name and --server are required")

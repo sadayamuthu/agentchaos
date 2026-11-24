@@ -19,6 +19,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/sadayamuthu/agentchaos/internal/experiment"
 	"github.com/sadayamuthu/agentchaos/internal/grade"
@@ -36,10 +37,14 @@ const (
 	ReasonFaultNotTriggered = "fault-not-triggered"
 	ReasonAgentError        = "agent-error"
 	ReasonCancelled         = "cancelled"
+	ReasonServerUnavailable = "server-unavailable"
 )
 
 // tailSize is how much of the agent's stdout and stderr a RunResult keeps.
 const tailSize = 4 << 10
+
+// logTailSize is how much of a proxy log the server check's Detail keeps.
+const logTailSize = 500
 
 // RunResult is the outcome of one run of one experiment.
 type RunResult struct {
@@ -47,8 +52,8 @@ type RunResult struct {
 	Index      int
 	// Status is pass, fail, invalid or error.
 	Status string
-	// Reason is did-not-finish, fault-not-triggered, agent-error, cancelled
-	// or empty.
+	// Reason is did-not-finish, fault-not-triggered, server-unavailable,
+	// agent-error, cancelled or empty.
 	Reason                 string
 	Checks                 []grade.Check
 	ExitCode               int
@@ -140,7 +145,8 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	for i, name := range servers {
 		srv := r.File.Servers[name]
 		traces[i] = filepath.Join(dir, "trace-"+name+".jsonl")
-		args := []string{"proxy", "--experiment", expPath, "--name", exp.Name, "--server", name, "--trace", traces[i], "--"}
+		args := []string{"proxy", "--experiment", expPath, "--name", exp.Name, "--server", name,
+			"--trace", traces[i], "--log", proxyLog(dir, name), "--"}
 		env := srv.Env
 		if env == nil {
 			env = map[string]string{}
@@ -150,8 +156,13 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	mcpPath := filepath.Join(dir, "mcp.json")
 	stdoutPath, stderrPath := filepath.Join(dir, "stdout.txt"), filepath.Join(dir, "stderr.txt")
 	// A reused run directory must not leak the last run's output into this
-	// one: the proxies append to their traces.
-	for _, p := range append([]string{mcpPath, stdoutPath, stderrPath}, traces...) {
+	// one: the proxies append to their traces and logs.
+	logs, err := filepath.Glob(filepath.Join(dir, "proxy-*.log"))
+	if err != nil {
+		return setupErr(err)
+	}
+	stale := append([]string{mcpPath, stdoutPath, stderrPath}, traces...)
+	for _, p := range append(stale, logs...) {
 		if err := os.Remove(p); err != nil && !errors.Is(err, os.ErrNotExist) {
 			return setupErr(err)
 		}
@@ -198,7 +209,8 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	res.StdoutTail, res.StderrTail = tail(stdout), tail(stderr)
 
 	var lists [][]switchyard.Event
-	for _, p := range traces {
+	answered := map[string]bool{} // servers that sent any response
+	for i, p := range traces {
 		evs, err := readTrace(p)
 		if err != nil {
 			res.Status = StatusError
@@ -207,6 +219,11 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		}
 		if _, err := os.Stat(p); err == nil {
 			res.TraceFiles = append(res.TraceFiles, p)
+		}
+		for _, e := range evs {
+			if e.Kind == switchyard.KindResponse && !upstreamClosed(e) {
+				answered[servers[i]] = true
+			}
 		}
 		lists = append(lists, evs)
 	}
@@ -238,6 +255,12 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		res.Status, res.Reason = StatusError, ReasonAgentError
 	case ar.timedOut:
 		res.Status, res.Reason = StatusFail, ReasonDidNotFinish
+	case !faulted && !answered[exp.Fault.Server()]:
+		// The fault's server never answered anything: it most likely
+		// failed to start, which says nothing about the agent.
+		srv := exp.Fault.Server()
+		res.Status, res.Reason = StatusInvalid, ReasonServerUnavailable
+		res.Checks = append([]grade.Check{{Name: "server", Pass: false, Detail: serverDetail(proxyLog(dir, srv), srv)}}, res.Checks...)
 	case !faulted:
 		res.Status, res.Reason = StatusInvalid, ReasonFaultNotTriggered
 	default:
@@ -250,6 +273,34 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		}
 	}
 	return res
+}
+
+// proxyLog is the log file of server's proxy in run directory dir.
+func proxyLog(dir, server string) string {
+	return filepath.Join(dir, "proxy-"+server+".log")
+}
+
+// upstreamClosed reports whether e is the error response the proxy itself
+// sends when the upstream server's output has ended, as opposed to a
+// response from the server.
+func upstreamClosed(e switchyard.Event) bool {
+	return e.Error != nil && e.Error.Code == -32603 && e.Error.Message == "upstream closed"
+}
+
+// serverDetail is the server check's detail: the end of the proxy log at
+// path, trimmed, or a fixed message naming server if it is empty.
+func serverDetail(path, server string) string {
+	b, _ := os.ReadFile(path)
+	if len(b) > logTailSize {
+		b = b[len(b)-logTailSize:]
+		for len(b) > 0 && !utf8.RuneStart(b[0]) {
+			b = b[1:]
+		}
+	}
+	if s := strings.TrimSpace(string(b)); s != "" {
+		return s
+	}
+	return "server " + server + " never responded"
 }
 
 // readTrace reads a JSONL trace of switchyard events. A missing file is zero

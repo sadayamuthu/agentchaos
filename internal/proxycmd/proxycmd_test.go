@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -239,5 +240,40 @@ func TestProxyCleanEOFExitsZero(t *testing.T) {
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
 		t.Fatalf("exit on clean EOF: %v; stderr: %s", err, stderr.String())
+	}
+}
+
+func TestProxyLogCapturesUpstreamStderr(t *testing.T) {
+	logPath := filepath.Join(t.TempDir(), "proxy.log")
+	args := []string{"proxy", "--experiment", writeExperiment(t), "--name", "crm-error", "--server", "crm",
+		"--log", logPath, "--", "/bin/sh", "-c", "echo boom >&2; exit 1"}
+	cmd := exec.Command(agentchaosBin, args...)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	// Stdin stays open, so the upstream exits before the client is done.
+	in, err := cmd.StdinPipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.Start(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := io.WriteString(in, `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}`+"\n"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.Wait(); err == nil {
+		t.Fatal("exit 0, want an error: the upstream exited first")
+	}
+	if stderr.Len() != 0 {
+		t.Fatalf("stderr = %q, want everything in the log", stderr.String())
+	}
+	b, err := os.ReadFile(logPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"boom", "agentchaos proxy crm:"} {
+		if !strings.Contains(string(b), want) {
+			t.Fatalf("log %q lacks %q", b, want)
+		}
 	}
 }

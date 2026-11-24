@@ -395,3 +395,32 @@ func TestRunTimeoutKillsGrandchildren(t *testing.T) {
 		}
 	}
 }
+
+func TestRunServerUnavailable(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--on-failure", "report"), "", "run_timeout: 30s", `  - name: down
+    task: look up the account
+    fault: {tool: crm.lookup, type: error, every_call: true}
+`)
+	r.File.Servers["crm"] = experiment.Server{Command: []string{"/bin/sh", "-c", "echo boom >&2; exit 1"}}
+	res := one(t, r.RunAll(context.Background()))
+	if res.Status != "invalid" || res.Reason != "server-unavailable" {
+		t.Fatalf("status %s/%s, want invalid/server-unavailable: %+v", res.Status, res.Reason, res)
+	}
+	if d := checkDetail(t, res, "server"); !strings.Contains(d, "boom") {
+		t.Fatalf("server check detail %q does not contain the server's stderr", d)
+	}
+}
+
+func TestRunServerNeverStarted(t *testing.T) {
+	// The agent never starts the proxy, so the server's log is empty.
+	r := one(t, runFile(t, `["/bin/sh", "-c", "echo done"]`, "run_timeout: 30s", `  - name: e
+    task: t
+    fault: {tool: crm.lookup, type: error, every_call: true}
+`))
+	if r.Status != "invalid" || r.Reason != "server-unavailable" {
+		t.Fatalf("status %s/%s, want invalid/server-unavailable: %+v", r.Status, r.Reason, r)
+	}
+	if d := checkDetail(t, r, "server"); d != "server crm never responded" {
+		t.Fatalf("server check detail %q", d)
+	}
+}

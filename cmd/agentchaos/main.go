@@ -2,7 +2,7 @@
 //
 // Usage:
 //
-//	agentchaos proxy --experiment FILE --name EXPERIMENT --server SERVER [--trace FILE] -- <cmd> [args...]
+//	agentchaos proxy --experiment FILE --name EXPERIMENT --server SERVER [--trace FILE] [--log FILE] -- <cmd> [args...]
 //	agentchaos run FILE [--out DIR] [--json PATH]
 //	agentchaos version
 package main

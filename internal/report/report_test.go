@@ -110,3 +110,14 @@ func TestWriteJSON(t *testing.T) {
 		t.Fatalf("%+v", got.Experiments[1])
 	}
 }
+
+func TestTableOneLineBehaviour(t *testing.T) {
+	f := &experiment.File{Runs: 1, PassThreshold: 1, Experiments: []experiment.Experiment{{Name: "e"}}}
+	rs := []runner.RunResult{run("e", 1, "invalid", "server-unavailable", grade.Check{Name: "server", Detail: "boom\n  agentchaos proxy crm: upstream closed"})}
+	var buf bytes.Buffer
+	report.Table(&buf, f, rs, "r.json")
+	want := "EXPERIMENT  BEHAVIOUR                                   RESULT\ne           boom agentchaos proxy crm: upstream closed  FAIL 0/1\n\n0 of 1 passed. Report: r.json\n"
+	if buf.String() != want {
+		t.Fatalf("got:\n%s\nwant:\n%s", buf.String(), want)
+	}
+}
