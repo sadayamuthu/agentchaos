@@ -132,7 +132,7 @@ Still planned:
 
 - **Test against real tools, with faults on top**, not against mocks.
 - **Grade behaviour, not output text.** What the agent *did* next is what matters.
-- **Safe by default.** Experiments that could cause real side effects run in [Airlock](https://github.com/sadayamuthu/airlock) or against staging.
+- **Safe by default.** Experiments that could cause real side effects run in [AgentBox](https://github.com/sadayamuthu/agentbox) or against staging.
 
 ---
 
@@ -144,15 +144,15 @@ The plan, from the first working version to 1.0, is in [ROADMAP.md](ROADMAP.md).
 
 ## Built on switchyard
 
-`agentchaos` is a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → fuse → intentlock → taintline → rewind → MCP server`).
+`agentchaos` is a Go binary built on [switchyard](https://github.com/sadayamuthu/switchyard), OpenAstra's shared MCP proxy core: its fault-injecting proxy is a set of switchyard hooks. AgentChaos is switchyard's first consumer. It stacks with the other switchyard tools by chaining (`agent → agentfuse → agentlock → agenttaint → agentrewind → agentbox → MCP server`).
 
 ---
 
 ## Related OpenAstra projects
 
 - OpenQA (in the lab): adversarial test suites for agents; AgentChaos covers failures rather than attacks
-- [Fuse](https://github.com/sadayamuthu/fuse): AgentChaos checks the breakers trip
-- [Rewind](https://github.com/sadayamuthu/rewind): undo for experiments run against real systems
+- [AgentFuse](https://github.com/sadayamuthu/agentfuse): AgentChaos checks the breakers trip
+- [AgentRewind](https://github.com/sadayamuthu/agentrewind): undo for experiments run against real systems
 
 ---
 

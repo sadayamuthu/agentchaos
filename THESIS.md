@@ -20,9 +20,9 @@ finds these until a user does.
    (unbounded retries, no backoff, silent continuation, unexpected tool calls)
    are visible in the sequence of calls, without judging output text.
 3. **The proxy is the product's foundation, and OpenAstra's.** The same
-   interception layer that injects faults can enforce envelopes (IntentLock),
-   track taint (Taintline), count and trip (Fuse) and record undo data
-   (Rewind). Building it here, under test pressure, gives every runtime
+   interception layer that injects faults can enforce envelopes (AgentLock),
+   track taint (AgentTaint), count and trip (AgentFuse) and record undo data
+   (AgentRewind). Building it here, under test pressure, gives every runtime
    project a hardened base.
 
 ## Why now
@@ -49,8 +49,8 @@ question, not a quality one.
   aren't reproducible enough to gate a merge.
 - Teams don't route tools through a proxy in practice, so the harness can't
   reach real agents.
-- The proxy abstraction doesn't fit the needs of IntentLock, Taintline, Fuse
-  and Rewind, and each ends up writing its own.
+- The proxy abstraction doesn't fit the needs of AgentLock, AgentTaint, AgentFuse
+  and AgentRewind, and each ends up writing its own.
 
 ## Not a bet on
 
@@ -59,6 +59,6 @@ environments.
 
 ## Where it fits
 
-Area X, AI Resilience & Recovery. Tests that [Fuse](https://github.com/sadayamuthu/fuse)
-trips; uses [Airlock](https://github.com/sadayamuthu/airlock) or staging for
+Area X, AI Resilience & Recovery. Tests that [AgentFuse](https://github.com/sadayamuthu/agentfuse)
+trips; uses [AgentBox](https://github.com/sadayamuthu/agentbox) or staging for
 experiments with side effects; supplies the shared proxy core.
