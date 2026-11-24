@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"text/tabwriter"
+	"time"
 
 	"github.com/sadayamuthu/agentchaos/internal/experiment"
 	"github.com/sadayamuthu/agentchaos/internal/runner"
@@ -141,6 +142,9 @@ type jsonCheck struct {
 }
 
 type jsonRun struct {
+	Experiment string      `json:"experiment"`
+	Dir        string      `json:"dir"`
+	ToolCalls  int         `json:"tool_calls"`
 	Index      int         `json:"index"`
 	Status     string      `json:"status"`
 	Reason     string      `json:"reason"`
@@ -158,22 +162,32 @@ type jsonExperiment struct {
 	Runs     []jsonRun `json:"runs"`
 }
 
+// Provenance records what produced a report and when.
+type Provenance struct {
+	AgentchaosVersion string    `json:"agentchaos_version"`
+	GoVersion         string    `json:"go_version"`
+	OS                string    `json:"os"` // runtime.GOOS + "/" + runtime.GOARCH
+	StartedAt         time.Time `json:"started_at"`
+	FinishedAt        time.Time `json:"finished_at"`
+}
+
 type jsonReport struct {
 	Version     int              `json:"version"`
 	File        string           `json:"file"`
 	Snapshot    string           `json:"experiment_snapshot"`
+	Provenance  Provenance       `json:"provenance"`
 	Experiments []jsonExperiment `json:"experiments"`
 }
 
 // WriteJSON writes the JSON report to path. snapshot is the copy of the
 // experiment file the proxies loaded, or "".
-func WriteJSON(path string, f *experiment.File, snapshot string, results []runner.RunResult) error {
-	rep := jsonReport{Version: 1, File: f.Path, Snapshot: snapshot, Experiments: []jsonExperiment{}}
+func WriteJSON(path string, f *experiment.File, snapshot string, prov Provenance, results []runner.RunResult) error {
+	rep := jsonReport{Version: 1, File: f.Path, Snapshot: snapshot, Provenance: prov, Experiments: []jsonExperiment{}}
 	for _, g := range groups(f, results) {
 		je := jsonExperiment{Name: g.name, PassRate: g.rate(f), Runs: []jsonRun{}}
 		for _, r := range g.runs {
 			jr := jsonRun{
-				Index: r.Index, Status: r.Status, Reason: r.Reason, ExitCode: r.ExitCode,
+				Experiment: r.Experiment, Dir: r.Dir, ToolCalls: r.ToolCalls, Index: r.Index, Status: r.Status, Reason: r.Reason, ExitCode: r.ExitCode,
 				DurationMS: r.Duration.Milliseconds(), StdoutTail: r.StdoutTail, StderrTail: r.StderrTail,
 				Checks: []jsonCheck{}, TraceFiles: []string{},
 			}

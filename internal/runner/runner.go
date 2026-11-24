@@ -60,6 +60,10 @@ type RunResult struct {
 	Duration               time.Duration
 	TraceFiles             []string
 	StdoutTail, StderrTail string
+	// Dir is the absolute run directory.
+	Dir string
+	// ToolCalls is the number of tools/call requests the agent made.
+	ToolCalls int
 }
 
 // Runner runs the experiments of File.
@@ -117,6 +121,7 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	if err != nil {
 		return setupErr(err)
 	}
+	res.Dir = dir
 	self := r.Self
 	if strings.Contains(self, "/") { // a bare name is left for PATH lookup
 		if self, err = filepath.Abs(self); err != nil {
@@ -250,6 +255,7 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 			faulted = true
 		}
 	}
+	res.ToolCalls = calls
 	res.Checks = grade.Evaluate(exp.Expect, events, string(stdout), ar.exitCode)
 	switch {
 	// A run killed at the wall-clock limit did not exit on its own, so its

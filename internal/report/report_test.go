@@ -74,7 +74,7 @@ func TestExitCode(t *testing.T) {
 
 func TestWriteJSON(t *testing.T) {
 	p := filepath.Join(t.TempDir(), "r.json")
-	if err := report.WriteJSON(p, file(0.8), "/out/experiment.yaml", results()); err != nil {
+	if err := report.WriteJSON(p, file(0.8), "/out/experiment.yaml", report.Provenance{}, results()); err != nil {
 		t.Fatal(err)
 	}
 	data, _ := os.ReadFile(p)
@@ -119,5 +119,45 @@ func TestTableOneLineBehaviour(t *testing.T) {
 	want := "EXPERIMENT  BEHAVIOUR                                   RESULT\ne           boom agentchaos proxy crm: upstream closed  FAIL 0/1\n\n0 of 1 passed. Report: r.json\n"
 	if buf.String() != want {
 		t.Fatalf("got:\n%s\nwant:\n%s", buf.String(), want)
+	}
+}
+
+func TestWriteJSONProvenanceAndRunFields(t *testing.T) {
+	p := filepath.Join(t.TempDir(), "r.json")
+	f := &experiment.File{Path: "/x/exp.yaml", Runs: 1, PassThreshold: 1, Experiments: []experiment.Experiment{{Name: "exp-a"}}}
+	start := time.Date(2026, 1, 2, 3, 4, 5, 0, time.UTC)
+	prov := report.Provenance{AgentchaosVersion: "v9.9.9", GoVersion: "go1.x", OS: "linux/amd64", StartedAt: start, FinishedAt: start.Add(time.Minute)}
+	rs := []runner.RunResult{{Experiment: "exp-a", Index: 1, Status: "pass", Dir: "/abs/run/0", ToolCalls: 3}}
+	if err := report.WriteJSON(p, f, "", prov, rs); err != nil {
+		t.Fatal(err)
+	}
+	data, _ := os.ReadFile(p)
+	var got struct {
+		Version    int `json:"version"`
+		Provenance struct {
+			Version    string    `json:"agentchaos_version"`
+			GoVersion  string    `json:"go_version"`
+			OS         string    `json:"os"`
+			StartedAt  time.Time `json:"started_at"`
+			FinishedAt time.Time `json:"finished_at"`
+		} `json:"provenance"`
+		Experiments []struct {
+			Runs []struct {
+				Dir        string `json:"dir"`
+				ToolCalls  int    `json:"tool_calls"`
+				Experiment string `json:"experiment"`
+			} `json:"runs"`
+		} `json:"experiments"`
+	}
+	if err := json.Unmarshal(data, &got); err != nil {
+		t.Fatal(err)
+	}
+	if got.Version != 1 || got.Provenance.Version != "v9.9.9" || got.Provenance.GoVersion != "go1.x" || got.Provenance.OS != "linux/amd64" ||
+		!got.Provenance.StartedAt.Equal(start) || !got.Provenance.FinishedAt.Equal(start.Add(time.Minute)) {
+		t.Fatalf("%+v", got)
+	}
+	r := got.Experiments[0].Runs[0]
+	if r.Dir != "/abs/run/0" || r.ToolCalls != 3 || r.Experiment != "exp-a" {
+		t.Fatalf("%+v", r)
 	}
 }

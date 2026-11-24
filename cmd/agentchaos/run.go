@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/sadayamuthu/agentchaos/internal/experiment"
@@ -112,9 +113,14 @@ func runCmd(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	}
 
 	r := &runner.Runner{File: f, Self: self, WorkDir: dir, Snapshot: snapshot}
+	started := time.Now()
 	results := r.RunAll(ctx)
+	prov := report.Provenance{
+		AgentchaosVersion: currentVersion(), GoVersion: runtime.Version(),
+		OS: runtime.GOOS + "/" + runtime.GOARCH, StartedAt: started, FinishedAt: time.Now(),
+	}
 
-	if err := report.WriteJSON(reportPath, f, snapshot, results); err != nil {
+	if err := report.WriteJSON(reportPath, f, snapshot, prov, results); err != nil {
 		fmt.Fprintf(stderr, "agentchaos: writing report: %v\n", err)
 		return 2
 	}
