@@ -4,6 +4,7 @@ package faults
 
 import (
 	"context"
+	"encoding/json"
 	"math/rand/v2"
 	"time"
 
@@ -111,6 +112,9 @@ func (h *hook) OnRequest(ctx context.Context, s *switchyard.Session, r *switchya
 }
 
 func (h *hook) OnResponse(_ context.Context, s *switchyard.Session, r *switchyard.Request, resp *switchyard.Response) *switchyard.Response {
+	if r.Method == "tools/list" {
+		return h.toolList(resp)
+	}
 	if !takePending(s, r.Seq) {
 		return resp
 	}
@@ -119,4 +123,40 @@ func (h *hook) OnResponse(_ context.Context, s *switchyard.Session, r *switchyar
 		return resp
 	}
 	return &switchyard.Response{Result: mutate(h.f, tr)}
+}
+
+// toolList drops the target tool's outputSchema from a tools/list response
+// when the fault is partial or malformed. Those faults remove
+// structuredContent, and a non-error result without it is a protocol error
+// for a tool that declares an outputSchema, so the agent would see a client
+// error instead of half or garbage data. Every other tool and field is kept,
+// and other fault types pass the response through.
+func (h *hook) toolList(resp *switchyard.Response) *switchyard.Response {
+	if h.f.Type != "partial" && h.f.Type != "malformed" {
+		return resp
+	}
+	tools, ok := resp.ToolList()
+	if !ok {
+		return resp
+	}
+	changed := false
+	for i, t := range tools {
+		if t.Name != h.tool {
+			continue
+		}
+		var m map[string]json.RawMessage
+		if json.Unmarshal(t.Raw, &m) != nil {
+			continue
+		}
+		if _, has := m["outputSchema"]; !has {
+			continue
+		}
+		delete(m, "outputSchema")
+		tools[i].Raw = marshal(m)
+		changed = true
+	}
+	if !changed {
+		return resp
+	}
+	return &switchyard.Response{Result: switchyard.ToolListResult(resp.Result, tools)}
 }

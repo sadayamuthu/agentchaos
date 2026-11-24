@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -48,6 +49,12 @@ experiments:
   - name: crm-error
     task: look up an account
     fault: {tool: crm.lookup, type: error, every_call: true, message: crm is down}
+  - name: crm-partial
+    task: look up an account
+    fault: {tool: crm.lookup, type: partial, every_call: true}
+  - name: crm-malformed
+    task: look up an account
+    fault: {tool: crm.lookup, type: malformed, every_call: true, corrupt: drop-fields}
 `
 
 func writeExperiment(t *testing.T) string {
@@ -67,11 +74,12 @@ func proxyArgs(exp, name, server, trace string) []string {
 	return append(args, "--", testserverBin)
 }
 
-func connect(t *testing.T, args []string) *mcp.ClientSession {
+func connect(t *testing.T, args []string, env ...string) *mcp.ClientSession {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	t.Cleanup(cancel)
 	cmd := exec.Command(agentchaosBin, args...)
+	cmd.Env = append(os.Environ(), env...)
 	cmd.Stderr = os.Stderr
 	client := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "0"}, nil)
 	cs, err := client.Connect(ctx, &mcp.CommandTransport{Command: cmd}, nil)
@@ -275,5 +283,54 @@ func TestProxyLogCapturesUpstreamStderr(t *testing.T) {
 		if !strings.Contains(string(b), want) {
 			t.Fatalf("log %q lacks %q", b, want)
 		}
+	}
+}
+
+// outputSchemas returns, per tool name, whether tools/list declares an
+// outputSchema for it.
+func outputSchemas(t *testing.T, cs *mcp.ClientSession) map[string]bool {
+	t.Helper()
+	res, err := cs.ListTools(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := map[string]bool{}
+	for _, tool := range res.Tools {
+		m[tool.Name] = tool.OutputSchema != nil
+	}
+	return m
+}
+
+// TestProxyPartialDropsOutputSchema: a non-error result without
+// structuredContent is illegal for a tool that declares an outputSchema, so
+// partial and malformed faults, which drop structuredContent, must drop the
+// target tool's outputSchema from tools/list, and only that.
+func TestProxyPartialDropsOutputSchema(t *testing.T) {
+	for _, name := range []string{"crm-partial", "crm-malformed"} {
+		t.Run(name, func(t *testing.T) {
+			cs := connect(t, proxyArgs(writeExperiment(t), name, "crm", ""), "TESTSERVER_TYPED=1")
+			if got, want := outputSchemas(t, cs), map[string]bool{"lookup": false, "other": true}; !reflect.DeepEqual(got, want) {
+				t.Fatalf("outputSchema present: %v, want %v", got, want)
+			}
+			r := callLookup(t, cs)
+			if r.IsError || r.StructuredContent != nil {
+				t.Fatalf("lookup: %+v, want a non-error result without structuredContent", r)
+			}
+		})
+	}
+}
+
+func TestProxyKeepsOutputSchemas(t *testing.T) {
+	want := map[string]bool{"lookup": true, "other": true}
+	for _, tt := range []struct{ name, server string }{
+		{"crm-partial", "orders"}, // pass-through: the fault is on crm
+		{"crm-error", "crm"},      // another fault type
+	} {
+		t.Run(tt.name+"/"+tt.server, func(t *testing.T) {
+			cs := connect(t, proxyArgs(writeExperiment(t), tt.name, tt.server, ""), "TESTSERVER_TYPED=1")
+			if got := outputSchemas(t, cs); !reflect.DeepEqual(got, want) {
+				t.Fatalf("outputSchema present: %v, want %v", got, want)
+			}
+		})
 	}
 }
