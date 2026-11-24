@@ -3,7 +3,7 @@
 // Usage:
 //
 //	agentchaos proxy --experiment FILE --name EXPERIMENT --server SERVER [--trace FILE] -- <cmd> [args...]
-//	agentchaos run
+//	agentchaos run FILE [--out DIR] [--json PATH]
 //	agentchaos version
 package main
 
@@ -39,8 +39,7 @@ func run(ctx context.Context, args []string, stdin io.Reader, stdout, stderr io.
 	case "proxy":
 		return proxycmd.Run(ctx, args[1:], stdin, stdout, stderr)
 	case "run":
-		fmt.Fprintln(stderr, "agentchaos run: not implemented yet")
-		return 2
+		return runCmd(ctx, args[1:], stdout, stderr)
 	case "version":
 		fmt.Fprintln(stdout, "agentchaos", version)
 		return 0

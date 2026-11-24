@@ -1,0 +1,5 @@
+EXPERIMENT               BEHAVIOUR                   RESULT
+crm.lookup timeout       never called x              pass 4/5
+orders.refund error 500  no backoff between retries  FAIL 1/5
+
+1 of 2 passed. Report: out/report.json
