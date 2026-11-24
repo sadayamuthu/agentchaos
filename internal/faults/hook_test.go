@@ -155,7 +155,7 @@ func TestMalformedInvalidJSON(t *testing.T) {
 
 func TestOtherToolUntouched(t *testing.T) {
 	rec := &testkit.Recorder{}
-	cs := connect(t, experiment.Fault{Tool: "s.lookup", Type: "error", EveryCall: true, Message: "x"}, rec)
+	cs := connect(t, experiment.Fault{Tool: "s.lookup", Type: "error", EveryCall: true, ErrorMode: "tool", Message: "x"}, rec)
 	for range 3 {
 		r, err := call(context.Background(), cs, "other", nil)
 		if err != nil {
@@ -174,7 +174,7 @@ func TestOtherToolUntouched(t *testing.T) {
 
 func faultedIndexes(t *testing.T, seed int64) []int {
 	t.Helper()
-	cs := connect(t, experiment.Fault{Tool: "s.lookup", Type: "error", Probability: 0.5, Seed: seed, Message: "x"}, nil)
+	cs := connect(t, experiment.Fault{Tool: "s.lookup", Type: "error", Probability: 0.5, Seed: seed, ErrorMode: "tool", Message: "x"}, nil)
 	var idx []int
 	for i := 1; i <= 20; i++ {
 		r, err := call(context.Background(), cs, "lookup", nil)
@@ -226,7 +226,7 @@ func TestOnCallParallelDeterministic(t *testing.T) {
 		t.Run(fmt.Sprintf("rep%d", rep), func(t *testing.T) {
 			rec := &testkit.Recorder{}
 			arr := arrivals{ch: make(chan [2]uint64, 6)}
-			cs := connect(t, experiment.Fault{Tool: "s.lookup", Type: "error", OnCall: 3, Message: "boom"}, rec, arr)
+			cs := connect(t, experiment.Fault{Tool: "s.lookup", Type: "error", OnCall: 3, ErrorMode: "tool", Message: "boom"}, rec, arr)
 
 			var wg sync.WaitGroup
 			results := make([]*mcp.CallToolResult, 7)
@@ -337,17 +337,17 @@ func TestMutate(t *testing.T) {
 		want string
 	}{
 		{"partial bytes on utf8 boundary", experiment.Fault{Type: "partial", Bytes: 2},
-			`{"content":[{"text":"h","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}],"structuredContent":{"a":1}}`},
+			`{"content":[{"text":"h","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}]}`},
 		{"partial bytes larger than text", experiment.Fault{Type: "partial", Bytes: 100},
-			`{"content":[{"text":"héllo wörld","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}],"structuredContent":{"a":1}}`},
+			`{"content":[{"text":"héllo wörld","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}]}`},
 		{"partial fraction", experiment.Fault{Type: "partial", Fraction: 0.5},
-			`{"content":[{"text":"héllo","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}],"structuredContent":{"a":1}}`},
+			`{"content":[{"text":"héllo","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}]}`},
 		{"invalid-json", experiment.Fault{Type: "malformed", Corrupt: "invalid-json"},
-			`{"content":[{"text":"héllo{\"","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}],"structuredContent":{"a":1}}`},
+			`{"content":[{"text":"héllo{\"","type":"text"},{"type":"image","data":"AAAA","mimeType":"image/png"}]}`},
 		{"drop-fields", experiment.Fault{Type: "malformed", Corrupt: "drop-fields"},
-			`{"structuredContent":{"a":1}}`},
+			`{}`},
 		{"wrong-types", experiment.Fault{Type: "malformed", Corrupt: "wrong-types"},
-			`{"content":"content","structuredContent":{"a":1}}`},
+			`{"content":"content"}`},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -382,5 +382,146 @@ func TestPartialPassesThroughErrors(t *testing.T) {
 	_, err := call(context.Background(), cs, "lookup", nil)
 	if err == nil || err.Error() != derr.Error() {
 		t.Fatalf("err = %v, want %v", err, derr)
+	}
+}
+
+// TestStructuredContentDropped: a server built with typed tools returns the
+// same data in structuredContent, so partial and malformed faults must drop
+// it or the agent still receives complete, valid data.
+func TestStructuredContentDropped(t *testing.T) {
+	srv := testkit.Server(t, testkit.ToolSpec{Name: "lookup", Handler: func(context.Context, map[string]any) (*mcp.CallToolResult, error) {
+		r := textResult(lookupText)
+		r.StructuredContent = map[string]any{"plan": "enterprise", "seats": 40}
+		return r, nil
+	}})
+	direct, err := call(context.Background(), testkit.ConnectDirect(t, srv), "lookup", nil)
+	if err != nil || direct.StructuredContent == nil {
+		t.Fatalf("direct call: err=%v structured=%v, want structuredContent present", err, direct)
+	}
+	for _, f := range []experiment.Fault{
+		{Tool: "s.lookup", Type: "partial", OnCall: 1, Fraction: 0.5},
+		{Tool: "s.lookup", Type: "malformed", OnCall: 1, Corrupt: "invalid-json"},
+		{Tool: "s.lookup", Type: "malformed", OnCall: 1, Corrupt: "drop-fields"},
+	} {
+		t.Run(f.Type+"/"+f.Corrupt, func(t *testing.T) {
+			cs := testkit.Connect(t, srv, switchyard.Options{Name: "test", Hooks: []switchyard.Hook{New(f)}})
+			r, err := call(context.Background(), cs, "lookup", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if r.StructuredContent != nil {
+				t.Fatalf("StructuredContent = %v, want dropped", r.StructuredContent)
+			}
+		})
+	}
+}
+
+// reorder is a test hook, placed before the fault hook, that holds the
+// request with Seq holdSeq until release is closed, so that request reaches
+// the hooks after later ones. It reports each lookup arrival's Seq on
+// arrived, and appends each Seq to order as the request leaves it.
+type reorder struct {
+	switchyard.Base
+	holdSeq uint64
+	release chan struct{}
+	arrived chan uint64
+	mu      *sync.Mutex
+	order   *[]uint64
+}
+
+func (reorder) Name() string { return "reorder" }
+
+func (h reorder) OnRequest(ctx context.Context, _ *switchyard.Session, r *switchyard.Request) switchyard.Decision {
+	tc, ok := r.ToolCall()
+	if !ok || tc.Name != "lookup" {
+		return switchyard.Continue()
+	}
+	h.arrived <- tc.Seq
+	if tc.Seq == h.holdSeq {
+		select {
+		case <-h.release:
+		case <-ctx.Done():
+		}
+	}
+	h.mu.Lock()
+	*h.order = append(*h.order, tc.Seq)
+	h.mu.Unlock()
+	return switchyard.Continue()
+}
+
+// TestOnCallTargetsSeqOutOfOrder: the Seq-3 request reaches the fault hook
+// fourth, yet on_call: 3 faults exactly that call, so the hook targets by
+// ToolCall.Seq and not by a counter.
+func TestOnCallTargetsSeqOutOfOrder(t *testing.T) {
+	for rep := range 5 {
+		t.Run(fmt.Sprintf("rep%d", rep), func(t *testing.T) {
+			var mu sync.Mutex
+			var order []uint64
+			ro := reorder{holdSeq: 3, release: make(chan struct{}), arrived: make(chan uint64, 4), mu: &mu, order: &order}
+			rec := &testkit.Recorder{}
+			cs := connect(t, experiment.Fault{Tool: "s.lookup", Type: "error", OnCall: 3, ErrorMode: "tool", Message: "boom"}, rec, ro)
+
+			var wg sync.WaitGroup
+			results := make([]*mcp.CallToolResult, 5)
+			errs := make([]error, 5)
+			launch := func(i int) {
+				wg.Add(1)
+				go func() {
+					defer wg.Done()
+					results[i], errs[i] = call(context.Background(), cs, "lookup", nil)
+				}()
+				select {
+				case got := <-ro.arrived:
+					if got != uint64(i) {
+						t.Errorf("arrival Seq = %d, want %d", got, i)
+					}
+				case <-time.After(5 * time.Second):
+					t.Fatalf("call %d never reached the proxy", i)
+				}
+			}
+			for i := 1; i <= 4; i++ {
+				launch(i)
+			}
+			// Calls 1, 2 and 4 complete while call 3 is still held back.
+			deadline := time.Now().Add(5 * time.Second)
+			for {
+				mu.Lock()
+				n := len(order)
+				mu.Unlock()
+				if n == 3 {
+					break
+				}
+				if time.Now().After(deadline) {
+					t.Fatalf("calls 1, 2, 4 did not pass the reorder hook (passed %d)", n)
+				}
+				time.Sleep(5 * time.Millisecond)
+			}
+			close(ro.release)
+			wg.Wait()
+
+			mu.Lock()
+			got := slices.Clone(order)
+			mu.Unlock()
+			if want := []uint64{1, 2, 4, 3}; !slices.Equal(got, want) {
+				t.Fatalf("hook arrival order = %v, want %v", got, want)
+			}
+			for i := 1; i <= 4; i++ {
+				if errs[i] != nil {
+					t.Fatalf("call %d: %v", i, errs[i])
+				}
+				if want := i == 3; results[i].IsError != want {
+					t.Errorf("call %d IsError = %v, want %v", i, results[i].IsError, want)
+				}
+			}
+			var faulted int
+			for _, e := range rec.Events() {
+				if e.Kind == switchyard.KindRequest && e.Decision == "block-tool:fault-error" {
+					faulted++
+				}
+			}
+			if faulted != 1 {
+				t.Errorf("faulted request events = %d, want 1", faulted)
+			}
+		})
 	}
 }

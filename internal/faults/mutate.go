@@ -52,6 +52,7 @@ func cut(s string, n int) string {
 // Other items, and items that cannot be decoded, are kept as they are.
 func mapText(tr *switchyard.ToolResult, fn func(string) string) json.RawMessage {
 	out := *tr
+	out.Rest = withoutStructured(tr.Rest)
 	out.Content = make([]json.RawMessage, len(tr.Content))
 	for i, item := range tr.Content {
 		out.Content[i] = item
@@ -69,6 +70,19 @@ func mapText(tr *switchyard.ToolResult, fn func(string) string) json.RawMessage 
 	return out.Marshal()
 }
 
+// withoutStructured returns a copy of rest without structuredContent. A
+// server built with typed tools repeats its data there, so leaving it would
+// hand the agent the complete, valid result despite the fault.
+func withoutStructured(rest map[string]json.RawMessage) map[string]json.RawMessage {
+	m := make(map[string]json.RawMessage, len(rest))
+	for k, v := range rest {
+		if k != "structuredContent" {
+			m[k] = v
+		}
+	}
+	return m
+}
+
 // withContent returns tr's result with its content member replaced by
 // content, or removed if content is nil. isError and every other member are
 // kept.
@@ -79,6 +93,7 @@ func withContent(tr *switchyard.ToolResult, content json.RawMessage) json.RawMes
 	}
 	delete(m, "content")
 	delete(m, "isError")
+	delete(m, "structuredContent")
 	if tr.IsError {
 		m["isError"] = json.RawMessage("true")
 	}
