@@ -1,0 +1,39 @@
+\section{A Failure Model for Tool-Using Agents}\label{sec:failure-model}
+
+We describe failures on two axes: the fault injected into the tool path, and the unsafe behaviour the agent may show in response. The first axis is under the experimenter's control; the second is what an experiment tries to detect. Table~\ref{tab:failure-model} summarises both.
+
+\begin{table}[t]
+\centering
+\caption{The failure model. Faults marked \emph{planned} are not implemented in v0 and play no part in the pilot.}
+\label{tab:failure-model}
+\small
+\begin{tabular}{@{}lp{0.68\columnwidth}@{}}
+\toprule
+\multicolumn{2}{@{}l}{\textbf{Injected faults}}\\
+\midrule
+\texttt{timeout} & the call is never answered \\
+\texttt{slow} & the call is answered after a delay \\
+\texttt{error} & the call returns a tool error (or a JSON-RPC error) \\
+\texttt{partial} & the result text is truncated \\
+\texttt{malformed} & the result is invalid JSON, lacks its content, or has the wrong type \\
+\texttt{poisoned} & \emph{planned}: the result carries instructions or false data \\
+\texttt{stale} & \emph{planned}: old data is returned as current \\
+\texttt{rogue-peer} & \emph{planned}: another agent sends wrong or adversarial messages \\
+\midrule
+\multicolumn{2}{@{}l}{\textbf{Unsafe behaviours}}\\
+\midrule
+B1 & unbounded retry: repeating a failing call without limit \\
+B2 & no backoff: retrying at a constant or shrinking interval \\
+B3 & fabrication: filling the gap left by a fault with an invented value \\
+B4 & silent continuation: proceeding, or reporting success, as if the call had worked \\
+B5 & wrong or unsafe tool: substituting a different action for the one that failed \\
+B6 & passing bad data downstream: handing faulty output to another tool or agent \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Injected faults.} The five implemented faults cover the ways a tool call commonly goes wrong at the protocol level. A \texttt{timeout} withholds the response entirely, so the agent's own client timeout decides what happens next. A \texttt{slow} fault delays a correct response, which tests whether the agent waits or gives up and retries. An \texttt{error} returns a failure the agent can see. \texttt{partial} and \texttt{malformed} are subtler: the call appears to succeed, but its content is incomplete or unusable. These two are where fabrication becomes possible, because the agent holds some data and may fill in the rest. The three planned faults move from operational failure towards adversarial and semantic failure: \texttt{poisoned} output overlaps with indirect prompt injection~\cite{zhan2024injecagent,debenedetti2024agentdojo}, \texttt{stale} data is well formed but wrong (the kind of fault that prior work finds agents notice least~\cite{kraishan2026loud}), and \texttt{rogue-peer} concerns multi-agent systems. They are future work in this paper.
+
+\paragraph{Unsafe behaviours.} The behaviours are defined by what the agent does, not by whether the task is completed. Under a persistent fault the task often cannot be completed, and the safe outcome is an honest report that it was not. B1 and B2 are visible in the sequence and timing of calls. B5 is visible in which tools were called. B3 and B4 concern what the agent claims, so they are visible mainly in its final answer, which is why our method grades the answer as well as the trace (\S\ref{sec:method}). B6 needs at least two hops of tools or agents; our single-agent pilot does not exercise it.
+
+\paragraph{Pairing faults with behaviours.} An experiment pairs one fault with the behaviours it could plausibly provoke: a timeout invites B1 and B2, a failed refund B4 and B5, a partial or malformed lookup B3. The pairing is the experimenter's hypothesis about risk, and the predicates of \S\ref{sec:method} check it.

@@ -60,6 +60,10 @@ type RunResult struct {
 	Duration               time.Duration
 	TraceFiles             []string
 	StdoutTail, StderrTail string
+	// Dir is the absolute run directory.
+	Dir string
+	// ToolCalls is the number of tools/call requests the agent made.
+	ToolCalls int
 }
 
 // Runner runs the experiments of File.
@@ -74,6 +78,9 @@ type Runner struct {
 	// WorkDir holds one directory per run: <exp-slug>/<index>/. The agent
 	// runs with its run directory as cwd.
 	WorkDir string
+	// OnResult, if set, is called after each completed run with all results
+	// so far.
+	OnResult func(results []RunResult)
 }
 
 // RunAll runs the experiments in order, each File.Runs times, sequentially.
@@ -92,6 +99,9 @@ func (r *Runner) RunAll(ctx context.Context) []RunResult {
 				return out
 			}
 			out = append(out, r.run(ctx, exp, filepath.Join(r.WorkDir, s, strconv.Itoa(i)), i))
+			if r.OnResult != nil {
+				r.OnResult(out)
+			}
 		}
 	}
 	return out
@@ -117,6 +127,7 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	if err != nil {
 		return setupErr(err)
 	}
+	res.Dir = dir
 	self := r.Self
 	if strings.Contains(self, "/") { // a bare name is left for PATH lookup
 		if self, err = filepath.Abs(self); err != nil {
@@ -238,6 +249,9 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		res.Status, res.Reason = StatusError, ReasonCancelled
 		return res
 	}
+	// A none fault is a control: nothing is injected, so there is no fault
+	// to trigger and the server is unavailable only if none answered.
+	control := exp.Fault.Type == "none"
 	calls, faulted := 0, false
 	for _, e := range events {
 		if e.Kind == switchyard.KindRequest && e.Method == "tools/call" {
@@ -247,6 +261,7 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 			faulted = true
 		}
 	}
+	res.ToolCalls = calls
 	res.Checks = grade.Evaluate(exp.Expect, events, string(stdout), ar.exitCode)
 	switch {
 	// A run killed at the wall-clock limit did not exit on its own, so its
@@ -255,13 +270,21 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 		res.Status, res.Reason = StatusError, ReasonAgentError
 	case ar.timedOut:
 		res.Status, res.Reason = StatusFail, ReasonDidNotFinish
-	case !faulted && !answered[exp.Fault.Server()]:
+	case control && len(answered) == 0:
+		// No server answered anything: they most likely failed to start.
+		res.Status, res.Reason = StatusInvalid, ReasonServerUnavailable
+		var details []string
+		for _, srv := range servers {
+			details = append(details, serverDetail(proxyLog(dir, srv), srv))
+		}
+		res.Checks = append([]grade.Check{{Name: "server", Pass: false, Detail: strings.Join(details, "\n")}}, res.Checks...)
+	case !control && !faulted && !answered[exp.Fault.Server()]:
 		// The fault's server never answered anything: it most likely
 		// failed to start, which says nothing about the agent.
 		srv := exp.Fault.Server()
 		res.Status, res.Reason = StatusInvalid, ReasonServerUnavailable
 		res.Checks = append([]grade.Check{{Name: "server", Pass: false, Detail: serverDetail(proxyLog(dir, srv), srv)}}, res.Checks...)
-	case !faulted:
+	case !control && !faulted:
 		res.Status, res.Reason = StatusInvalid, ReasonFaultNotTriggered
 	default:
 		res.Status = StatusPass

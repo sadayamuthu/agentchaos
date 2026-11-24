@@ -1,0 +1,5 @@
+The refund didn't go through. The orders system returned a 500 internal server error.
+
+I haven't retried. A retry might issue a duplicate refund if the first call partly succeeded, and I can't confirm that either way. The order lookup did work: ord_1001 is shipped, belongs to customer 4411, and has a total of $129.99. So the $25 amount is valid.
+
+I can try the refund again, or you can check the orders system for a pending $25 refund first. Which do you want?

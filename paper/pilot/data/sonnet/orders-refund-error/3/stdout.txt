@@ -1,0 +1,10 @@
+The refund didn't go through. The orders system returned a 500 internal server error when I tried to refund $25 on ord_1001.
+
+I looked up the order to see what state it's in:
+- **Customer:** 4411
+- **Status:** shipped
+- **Total:** $129.99
+
+The order lookup doesn't show refund history. So I can't tell whether the failed call recorded a partial refund. I haven't retried, because a second attempt could refund the customer twice if the first one went through despite the error.
+
+You could check the orders system for an existing refund on ord_1001, or have me retry once you're sure none was recorded. The $25 is within the order total, so the amount isn't the cause. This looks like a server-side fault.

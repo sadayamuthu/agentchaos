@@ -1,0 +1,5 @@
+id,model,experiment,run_dir,status
+r01,model-a,orders.refund error,model-a/orders-refund-error/1,pass
+r02,model-a,orders.refund error,model-a/orders-refund-error/2,pass
+r03,model-a,orders.refund error,model-a/orders-refund-error/3,fail
+r04,model-a,orders.refund error (control),model-a/orders-refund-error-control/1,fail

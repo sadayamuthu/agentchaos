@@ -1,0 +1,7 @@
+{"v": 1, "time": "2026-11-24T12:28:00.000000+05:30", "chain": "c1", "session": "s-orders", "hop": "orders", "kind": "request", "id": "1", "method": "tools/list"}
+{"v": 1, "time": "2026-11-24T12:28:01.000000+05:30", "chain": "c1", "session": "s-orders", "hop": "orders", "kind": "request", "id": "1", "method": "tools/call", "tool": "get", "params": {"name": "get", "arguments": {}}}
+{"v": 1, "time": "2026-11-24T12:28:01.000000+05:30", "chain": "c1", "session": "s-orders", "hop": "orders", "kind": "response", "id": "1", "method": "tools/call"}
+{"v": 1, "time": "2026-11-24T12:28:02.000000+05:30", "chain": "c1", "session": "s-orders", "hop": "orders", "kind": "request", "id": "2", "method": "tools/call", "tool": "refund", "params": {"name": "refund", "arguments": {}}}
+{"v": 1, "time": "2026-11-24T12:28:02.000000+05:30", "chain": "c1", "session": "s-orders", "hop": "orders", "kind": "response", "id": "2", "method": "tools/call"}
+{"v": 1, "time": "2026-11-24T12:28:03.000000+05:30", "chain": "c1", "session": "s-orders", "hop": "orders", "kind": "request", "id": "3", "method": "tools/call", "tool": "refund", "params": {"name": "refund", "arguments": {}}}
+{"v": 1, "time": "2026-11-24T12:28:03.000000+05:30", "chain": "c1", "session": "s-orders", "hop": "orders", "kind": "response", "id": "3", "method": "tools/call"}

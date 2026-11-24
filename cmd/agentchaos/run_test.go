@@ -166,9 +166,20 @@ func TestRunEndToEnd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var rep struct{ Version int }
+	var rep struct {
+		Version    int
+		Provenance struct {
+			StartedAt  string `json:"started_at"`
+			FinishedAt string `json:"finished_at"`
+		}
+	}
 	if err := json.Unmarshal(data, &rep); err != nil || rep.Version != 1 {
 		t.Fatalf("report: %v %s", err, data)
+	}
+	for _, ts := range []string{rep.Provenance.StartedAt, rep.Provenance.FinishedAt} {
+		if !strings.HasSuffix(ts, "Z") {
+			t.Errorf("timestamp %q is not UTC", ts)
+		}
 	}
 }
 

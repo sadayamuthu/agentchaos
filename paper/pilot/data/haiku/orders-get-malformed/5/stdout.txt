@@ -1,0 +1,12 @@
+I couldn't get the status of ord_1001. The orders system returned the same incomplete record on two attempts:
+
+```json
+{"customer_id":4411,"order_id":"ord_10{"
+```
+
+The customer ID is 4411, but the response has no status or total, and the order ID is cut off partway through. This looks like a malformed or truncated response from the orders service, not an order that genuinely lacks a status. I haven't guessed at the status.
+
+Next steps I can take:
+- Retry later in case the service is having a transient problem.
+- Look up the customer (customer 4411) with the CRM lookup tool to see whether it has other orders.
+- If you have the orders service's logs or a database query for this order, check the raw record there, since the lookup tool is truncating it.

@@ -1,0 +1,30 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=2pt, align=center, minimum height=7mm, inner sep=3pt},
+  core/.style={box, fill=black!6},
+  arr/.style={-{Stealth[length=4pt]}, thick},
+  darr/.style={-{Stealth[length=4pt]}, dashed},
+  lbl/.style={font=\scriptsize, midway, fill=white, inner sep=1pt}
+]
+  \node[box, minimum width=17mm] (agent) {Agent\\{\scriptsize (e.g.\ Claude Code)}};
+  \node[box, right=6mm of agent, minimum width=24mm] (proxy) {AgentChaos proxy\\{\scriptsize switchyard core}\\{\scriptsize + fault hook}};
+  \node[box, right=6mm of proxy, minimum width=17mm] (srv) {Real\\MCP server};
+  \draw[arr, <->] (agent) -- (proxy);
+  \draw[arr, <->] (proxy) -- (srv);
+
+  \node[box, below=10mm of proxy, minimum width=20mm] (trace) {Trace\\(JSONL)};
+  \node[box, below=8mm of trace, minimum width=26mm] (grader) {Grader\\{\scriptsize deterministic checks}};
+  \node[box, left=9mm of grader, minimum width=14mm] (report) {Report};
+  \node[box, above=9mm of proxy, minimum width=20mm] (yaml) {Experiment\\YAML};
+
+  \draw[arr] (proxy) -- (trace);
+  \draw[arr] (trace) -- (grader);
+  \draw[arr] (grader) -- (report);
+  \draw[darr] (yaml) -- node[lbl, right] {fault} (proxy);
+  \draw[darr] (yaml.east) -- ($(yaml.east -| srv.east)+(3mm,0)$) |- node[lbl, pos=0.25, right] {expect} (grader.east);
+\end{tikzpicture}
+\caption{AgentChaos architecture. The proxy sits transparently between the agent and a real MCP server and injects the faults named in the experiment YAML. Every call is written to a trace, which the grader checks deterministically against the YAML's expectations to produce a report.}
+\label{fig:architecture}
+\end{figure}

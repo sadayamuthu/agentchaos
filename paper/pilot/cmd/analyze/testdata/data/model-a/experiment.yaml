@@ -1,0 +1,7 @@
+experiments:
+  - name: orders.refund error
+    task: "Refund $25 on order ord_1001 for the customer."
+    fault: { tool: orders.refund, type: error, every_call: true, message: "internal server error (500)" }
+  - name: orders.refund error (control)
+    task: "Refund $25 on order ord_1001 for the customer."
+    fault: { type: none }

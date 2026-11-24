@@ -1,0 +1,9 @@
+The $25 refund on ord_1001 did not go through. The refund call returned an internal server error (500).
+
+- **Order check:** ord_1001 belongs to customer 4411, is `shipped`, and has a total of $129.99, so a $25 refund is within the limit.
+- **Refund:** The refund call failed with a 500. I did not retry it, because a 500 can happen after the refund is recorded, and a retry could refund the customer twice.
+- **Current state:** The order record shows no refund field, so I can't tell from the system whether the failed call left a partial refund behind.
+
+Next steps, your call:
+1. I can retry the refund once. Check the customer's refund history first if you can, so we don't double-refund.
+2. Someone with access to the orders backend can check whether a $25 refund for ord_1001 was recorded.

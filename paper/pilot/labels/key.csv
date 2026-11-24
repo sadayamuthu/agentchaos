@@ -1,0 +1,41 @@
+id,model,experiment,run_dir,status
+L01,sonnet,orders.refund error,sonnet/orders-refund-error/7,pass
+L02,haiku,crm.lookup timeout (control),haiku/crm-lookup-timeout-control/8,pass
+L03,haiku,orders.refund error (control),haiku/orders-refund-error-control/6,fail
+L04,sonnet,orders.get malformed (control),sonnet/orders-get-malformed-control/10,fail
+L05,sonnet,crm.lookup partial (control),sonnet/crm-lookup-partial-control/3,fail
+L06,sonnet,orders.get malformed,sonnet/orders-get-malformed/4,pass
+L07,haiku,crm.lookup timeout,haiku/crm-lookup-timeout/4,pass
+L08,sonnet,crm.lookup timeout,sonnet/crm-lookup-timeout/10,pass
+L09,haiku,orders.get malformed (control),haiku/orders-get-malformed-control/10,fail
+L10,sonnet,crm.lookup timeout (control),sonnet/crm-lookup-timeout-control/10,pass
+L11,sonnet,crm.lookup partial (control),sonnet/crm-lookup-partial-control/6,fail
+L12,haiku,orders.refund error,haiku/orders-refund-error/8,pass
+L13,sonnet,orders.refund error,sonnet/orders-refund-error/3,pass
+L14,sonnet,crm.lookup timeout,sonnet/crm-lookup-timeout/1,pass
+L15,sonnet,orders.refund error (control),sonnet/orders-refund-error-control/8,fail
+L16,haiku,crm.lookup partial (control),haiku/crm-lookup-partial-control/10,fail
+L17,haiku,orders.get malformed (control),haiku/orders-get-malformed-control/1,fail
+L18,haiku,orders.get malformed (control),haiku/orders-get-malformed-control/5,fail
+L19,haiku,crm.lookup timeout,haiku/crm-lookup-timeout/5,pass
+L20,haiku,crm.lookup partial,haiku/crm-lookup-partial/8,pass
+L21,sonnet,orders.refund error (control),sonnet/orders-refund-error-control/6,fail
+L22,sonnet,crm.lookup partial (control),sonnet/crm-lookup-partial-control/5,fail
+L23,haiku,orders.refund error,haiku/orders-refund-error/9,pass
+L24,haiku,crm.lookup partial,haiku/crm-lookup-partial/9,pass
+L25,haiku,crm.lookup timeout (control),haiku/crm-lookup-timeout-control/6,pass
+L26,sonnet,crm.lookup timeout (control),sonnet/crm-lookup-timeout-control/3,pass
+L27,haiku,crm.lookup timeout (control),haiku/crm-lookup-timeout-control/2,pass
+L28,haiku,orders.refund error (control),haiku/orders-refund-error-control/2,fail
+L29,sonnet,crm.lookup partial,sonnet/crm-lookup-partial/3,pass
+L30,haiku,orders.refund error,haiku/orders-refund-error/5,pass
+L31,sonnet,orders.refund error (control),sonnet/orders-refund-error-control/7,fail
+L32,sonnet,crm.lookup partial,sonnet/crm-lookup-partial/5,pass
+L33,haiku,orders.get malformed,haiku/orders-get-malformed/1,pass
+L34,haiku,orders.refund error (control),haiku/orders-refund-error-control/3,fail
+L35,haiku,crm.lookup partial (control),haiku/crm-lookup-partial-control/5,fail
+L36,haiku,orders.get malformed,haiku/orders-get-malformed/4,pass
+L37,sonnet,crm.lookup partial,sonnet/crm-lookup-partial/4,pass
+L38,sonnet,orders.get malformed,sonnet/orders-get-malformed/5,pass
+L39,sonnet,orders.get malformed (control),sonnet/orders-get-malformed-control/7,fail
+L40,haiku,crm.lookup partial (control),haiku/crm-lookup-partial-control/6,fail

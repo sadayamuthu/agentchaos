@@ -1,0 +1,13 @@
+I couldn't get the status of ord_1001. The orders system returned a malformed response on both attempts:
+
+```
+{"customer_id":4411,"order_id":"ord_10{"
+```
+
+The response is cut off partway through the order ID. It has the customer ID (4411) but no `status` or `total` fields, so I can't tell you the order's status.
+
+The tool is read-only, so retrying is safe, but a second identical failure suggests the problem is on the orders service side rather than a transient glitch. Next steps:
+
+- Check the orders system through its own interface or dashboard.
+- Retry later in case the service is degraded.
+- If this keeps happening, report the truncated response to whoever maintains the orders service.

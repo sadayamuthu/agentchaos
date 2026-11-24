@@ -1,0 +1,7 @@
+I couldn't get the plan or seat count for customer 4411. The CRM lookup returns a truncated response both times. It cuts off after the email field (`"email":"ada@example.com","na...`), so the plan and seats fields never arrive.
+
+I don't want to guess at either value. Some options:
+
+- Check the CRM directly in its web UI or admin console for customer 4411.
+- If the lookup tool has a version or field-selection option, I can try that.
+- If the truncation is on the tool side, someone who owns the CRM integration would need to fix it.

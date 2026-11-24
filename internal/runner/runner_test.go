@@ -125,6 +125,12 @@ func TestRunPass(t *testing.T) {
 	if len(r.TraceFiles) != 1 || filepath.Base(r.TraceFiles[0]) != "trace-crm.jsonl" {
 		t.Fatalf("trace files %v", r.TraceFiles)
 	}
+	if r.ToolCalls != 3 {
+		t.Fatalf("tool calls %d, want 3", r.ToolCalls)
+	}
+	if !filepath.IsAbs(r.Dir) || r.Dir != filepath.Dir(r.TraceFiles[0]) {
+		t.Fatalf("dir %q, trace dir %q", r.Dir, filepath.Dir(r.TraceFiles[0]))
+	}
 	if got := filepath.Base(filepath.Dir(filepath.Dir(r.TraceFiles[0]))) + "/" + filepath.Base(filepath.Dir(r.TraceFiles[0])); got != "crm-error/1" {
 		t.Fatalf("run dir %q, want crm-error/1", got)
 	}
@@ -424,5 +430,59 @@ func TestRunServerNeverStarted(t *testing.T) {
 	}
 	if d := checkDetail(t, r, "server"); d != "server crm never responded" {
 		t.Fatalf("server check detail %q", d)
+	}
+}
+
+func TestRunNoneFaultPassesOnChecks(t *testing.T) {
+	r := one(t, runFile(t, fake("--call", "crm.lookup", "--on-failure", "report"), "run_timeout: 30s", `  - name: control
+    task: look up the account
+    fault: {type: none}
+    expect:
+      must_call: [crm.lookup]
+`))
+	if r.Status != "pass" || r.Reason != "" {
+		t.Fatalf("status %s/%s, want pass: %+v", r.Status, r.Reason, r)
+	}
+}
+
+func TestRunNoneFaultServerUnavailable(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--on-failure", "report"), "", "run_timeout: 30s", `  - name: control
+    task: look up the account
+    fault: {type: none}
+`)
+	r.File.Servers["crm"] = experiment.Server{Command: []string{"/bin/sh", "-c", "echo boom >&2; exit 1"}}
+	res := one(t, r.RunAll(context.Background()))
+	if res.Status != "invalid" || res.Reason != "server-unavailable" {
+		t.Fatalf("status %s/%s, want invalid/server-unavailable: %+v", res.Status, res.Reason, res)
+	}
+	if d := checkDetail(t, res, "server"); !strings.Contains(d, "boom") {
+		t.Fatalf("server check detail %q does not contain the server's stderr", d)
+	}
+}
+
+func TestRunDirAbsoluteForRelativeWorkDir(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--max-attempts", "1", "--on-failure", "report"), "", "run_timeout: 30s", errorExperiment)
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	rel, err := filepath.Rel(wd, r.WorkDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r.WorkDir = rel
+	res := one(t, r.RunAll(context.Background()))
+	if !filepath.IsAbs(res.Dir) || res.Dir != filepath.Join(wd, rel, "crm-error", "1") {
+		t.Fatalf("dir %q", res.Dir)
+	}
+}
+
+func TestRunOnResult(t *testing.T) {
+	r := newRunner(t, fake("--call", "crm.lookup", "--max-attempts", "1", "--on-failure", "report"), "", "runs: 2\nrun_timeout: 30s", errorExperiment)
+	var sizes []int
+	r.OnResult = func(rs []runner.RunResult) { sizes = append(sizes, len(rs)) }
+	r.RunAll(context.Background())
+	if len(sizes) != 2 || sizes[0] != 1 || sizes[1] != 2 {
+		t.Fatalf("OnResult sizes %v, want [1 2]", sizes)
 	}
 }

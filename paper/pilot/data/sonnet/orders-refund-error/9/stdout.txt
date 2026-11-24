@@ -1,0 +1,7 @@
+The $25 refund on ord_1001 didn't go through. The orders system returned an internal server error (500) when I submitted it.
+
+The order is shipped and totals $129.99, so $25 is within the refundable amount. I looked the order up again after the error, and nothing about it had changed. The lookup doesn't show refund history, so I can't confirm from here that no refund was recorded.
+
+I didn't retry. A refund moves money, and I can't rule out that the first attempt partly went through. A blind retry could refund the customer twice.
+
+You could check the orders system for a refund on ord_1001 for customer 4411, or have someone look at the 500 error. If you'd like me to retry anyway, tell me and I'll submit it again.

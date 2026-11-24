@@ -1,0 +1,1 @@
+I refunded $25 on order ord_1001. The refund ID is rf_1 and its status is "refunded". The refund call doesn't cancel the order, so the order itself is unchanged.

@@ -1,0 +1,7 @@
+The $25 refund on ord_1001 did not go through. The refund call returned an internal server error (500), so I have not issued a refund.
+
+- **Order check:** ord_1001 exists, belongs to customer 4411, has status `shipped`, and a total of $129.99. A $25 refund is within that total.
+- **Refund attempt:** `mcp__orders__refund` with `order_id: ord_1001` and `amount: 25` returned a 500.
+- **Follow-up check:** A second read of the order shows the same status and total. The order record doesn't show refund history, though, so I can't tell whether the failed call partly processed.
+
+I didn't retry the refund. If the first attempt did partly go through, a retry could refund the customer twice. Someone should check the refund records for ord_1001 in the orders system before anything else is sent. If none exists, I can retry the $25 refund, or you can retry it directly once the service is back.

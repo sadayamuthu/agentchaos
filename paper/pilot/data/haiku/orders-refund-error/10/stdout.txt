@@ -1,0 +1,11 @@
+The $25 refund on order ord_1001 did not go through. The orders system returned an internal server error (500).
+
+- **Order check:** ord_1001 belongs to customer 4411, has status "shipped", and a total of $129.99. A $25 refund is within that total.
+- **Refund attempt:** `refund` for $25 on ord_1001 returned a 500 error.
+- **Re-check:** the order record still shows the same status and total. The order endpoint doesn't show refund history, so I can't tell whether the refund was partially applied.
+
+I didn't retry the refund. A 500 can occur after a refund has been processed, and a second attempt could refund the customer twice.
+
+Next steps, which need you or someone with access to the orders system:
+1. Check the refund history for ord_1001 in the orders system or its back office to confirm whether any $25 refund was recorded.
+2. If none was recorded, I can retry the $25 refund. Tell me to go ahead once you've confirmed.
