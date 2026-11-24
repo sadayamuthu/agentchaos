@@ -1,6 +1,7 @@
 package experiment
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -154,5 +155,28 @@ experiments:
 	}
 	if _, err := Load(p); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestValidateServerKeys(t *testing.T) {
+	for _, k := range []string{"a/b", "my crm", "a.b"} {
+		t.Run(k, func(t *testing.T) {
+			f := valid()
+			f.Servers[k] = Server{Command: []string{"x"}}
+			err := f.Validate()
+			want := fmt.Sprintf(`servers[%q]: key must match [A-Za-z0-9_-]+`, k)
+			if err == nil || !strings.Contains(err.Error(), want) {
+				t.Fatalf("want %q in %v", want, err)
+			}
+		})
+	}
+	for _, k := range []string{"crm_2", "crm-2"} {
+		t.Run(k, func(t *testing.T) {
+			f := valid()
+			f.Servers[k] = Server{Command: []string{"x"}}
+			if err := f.Validate(); err != nil {
+				t.Fatal(err)
+			}
+		})
 	}
 }

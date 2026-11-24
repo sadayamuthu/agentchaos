@@ -14,6 +14,9 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
+// serverKey is the form of a server key.
+var serverKey = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
+
 var faultTypes = map[string]bool{"timeout": true, "slow": true, "error": true, "partial": true, "malformed": true}
 
 // Load reads, defaults, path-resolves and validates an experiment file.
@@ -104,8 +107,9 @@ func (f *File) Validate() error {
 		switch {
 		case k == "":
 			add("servers: server key must not be empty")
-		case strings.Contains(k, "."):
-			add("servers[%q]: key must not contain \".\"", k)
+		case !serverKey.MatchString(k):
+			// Keys become file names and mcp__<key> tool prefixes.
+			add("servers[%q]: key must match [A-Za-z0-9_-]+ (ASCII letters, digits, \"_\" and \"-\")", k)
 		}
 		if len(s.Command) == 0 {
 			add("servers[%q].command: required", k)
