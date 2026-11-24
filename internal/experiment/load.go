@@ -17,12 +17,19 @@ import (
 var faultTypes = map[string]bool{"timeout": true, "slow": true, "error": true, "partial": true, "malformed": true}
 
 // Load reads, defaults, path-resolves and validates an experiment file.
+// It does not check that the commands exist.
 func Load(path string) (*File, error) {
-	abs, err := filepath.Abs(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	data, err := os.ReadFile(abs)
+	return Parse(path, data)
+}
+
+// Parse is Load with the file's contents, data, already read from path.
+// Relative command paths resolve against path's directory.
+func Parse(path string, data []byte) (*File, error) {
+	abs, err := filepath.Abs(path)
 	if err != nil {
 		return nil, err
 	}

@@ -64,6 +64,72 @@ experiments:
 	return p
 }
 
+// TestRunSnapshotsExperiment: the proxies load a snapshot taken when the run
+// started, so editing the suite mid-run cannot split injection from grading.
+func TestRunSnapshotsExperiment(t *testing.T) {
+	dir := t.TempDir()
+	orig, edited := filepath.Join(dir, "exp.yaml"), filepath.Join(dir, "edited.yaml")
+	// The agent overwrites the suite, changing the fault's message, before
+	// it starts the proxies.
+	argv := []string{"/bin/sh", "-c", `cp "$EDITED" "$ORIG" && exec "$0" "$@"`,
+		fakeagentBin, "--mcp-config", "{mcp_config}", "--call", "crm.lookup", "--on-failure", "report"}
+	q := make([]string, len(argv))
+	for i, a := range argv {
+		q[i] = fmt.Sprintf("%q", a)
+	}
+	body := func(msg string) string {
+		return fmt.Sprintf(`agent:
+  command: [%s]
+  env: {ORIG: %q, EDITED: %q}
+servers:
+  crm: {command: [%q]}
+run_timeout: 30s
+experiments:
+  - name: e
+    task: t
+    fault: {tool: crm.lookup, type: error, every_call: true, message: %s}
+`, strings.Join(q, ", "), orig, edited, testserverBin, msg)
+	}
+	original := body("original-message")
+	for p, b := range map[string]string{orig: original, edited: body("edited-message")} {
+		if err := os.WriteFile(p, []byte(b), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	out := filepath.Join(dir, "out")
+	stdout, stderr, _ := agentchaos(t, "run", orig, "--out", out)
+	data, err := os.ReadFile(filepath.Join(out, "report.json"))
+	if err != nil {
+		t.Fatalf("%v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
+	}
+	var rep struct {
+		Snapshot    string `json:"experiment_snapshot"`
+		Experiments []struct {
+			Runs []struct {
+				StdoutTail string `json:"stdout_tail"`
+			} `json:"runs"`
+		} `json:"experiments"`
+	}
+	if err := json.Unmarshal(data, &rep); err != nil {
+		t.Fatal(err)
+	}
+	if b, _ := os.ReadFile(orig); !strings.Contains(string(b), "edited-message") {
+		t.Fatalf("the agent did not edit the original file")
+	}
+	if len(rep.Experiments) != 1 || len(rep.Experiments[0].Runs) != 1 {
+		t.Fatalf("report %s", data)
+	}
+	if got := rep.Experiments[0].Runs[0].StdoutTail; !strings.Contains(got, "original-message") {
+		t.Fatalf("injection did not follow the snapshot: stdout %q", got)
+	}
+	if want := filepath.Join(out, "experiment.yaml"); rep.Snapshot != want {
+		t.Fatalf("experiment_snapshot %q, want %q", rep.Snapshot, want)
+	}
+	if snap, err := os.ReadFile(rep.Snapshot); err != nil || string(snap) != original {
+		t.Fatalf("snapshot %q (%v), want the original bytes", snap, err)
+	}
+}
+
 func agentchaos(t *testing.T, args ...string) (stdout, stderr string, code int) {
 	t.Helper()
 	return agentchaosIn(t, "", args...)

@@ -62,6 +62,10 @@ type Runner struct {
 	File *experiment.File
 	// Self is the path to the agentchaos binary, used as each server's proxy.
 	Self string
+	// Snapshot, if set, is the experiment file each proxy loads its fault
+	// from, instead of File.Path: a copy taken when the run started, so an
+	// edit to File.Path mid-run cannot change what is injected.
+	Snapshot string
 	// WorkDir holds one directory per run: <exp-slug>/<index>/. The agent
 	// runs with its run directory as cwd.
 	WorkDir string
@@ -114,7 +118,11 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 			return setupErr(err)
 		}
 	}
-	expPath, err := filepath.Abs(r.File.Path)
+	expPath := r.File.Path
+	if r.Snapshot != "" {
+		expPath = r.Snapshot
+	}
+	expPath, err = filepath.Abs(expPath)
 	if err != nil {
 		return setupErr(err)
 	}

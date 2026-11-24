@@ -74,13 +74,14 @@ func TestExitCode(t *testing.T) {
 
 func TestWriteJSON(t *testing.T) {
 	p := filepath.Join(t.TempDir(), "r.json")
-	if err := report.WriteJSON(p, file(0.8), results()); err != nil {
+	if err := report.WriteJSON(p, file(0.8), "/out/experiment.yaml", results()); err != nil {
 		t.Fatal(err)
 	}
 	data, _ := os.ReadFile(p)
 	var got struct {
 		Version     int    `json:"version"`
 		File        string `json:"file"`
+		Snapshot    string `json:"experiment_snapshot"`
 		Experiments []struct {
 			Name     string  `json:"name"`
 			PassRate float64 `json:"pass_rate"`
@@ -98,7 +99,7 @@ func TestWriteJSON(t *testing.T) {
 	if err := json.Unmarshal(data, &got); err != nil {
 		t.Fatal(err)
 	}
-	if got.Version != 1 || got.File != "/x/exp.yaml" || len(got.Experiments) != 2 {
+	if got.Version != 1 || got.File != "/x/exp.yaml" || got.Snapshot != "/out/experiment.yaml" || len(got.Experiments) != 2 {
 		t.Fatalf("%+v", got)
 	}
 	e := got.Experiments[0]

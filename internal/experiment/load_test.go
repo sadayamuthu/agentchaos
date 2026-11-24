@@ -139,3 +139,20 @@ func TestValidateJoinsAll(t *testing.T) {
 		t.Fatalf("got %v", err)
 	}
 }
+
+// TestLoadDoesNotStatCommands: the proxies load a snapshot of the file from
+// the output directory, where relative commands point nowhere.
+func TestLoadDoesNotStatCommands(t *testing.T) {
+	p := filepath.Join(t.TempDir(), "x.yaml")
+	y := `agent: {command: [./no/such/agent]}
+servers: {s: {command: [./no/such/server]}}
+experiments:
+  - {name: a, task: t, fault: {tool: s.t, type: error, every_call: true}}
+`
+	if err := os.WriteFile(p, []byte(y), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(p); err != nil {
+		t.Fatal(err)
+	}
+}

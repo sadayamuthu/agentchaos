@@ -158,12 +158,14 @@ type jsonExperiment struct {
 type jsonReport struct {
 	Version     int              `json:"version"`
 	File        string           `json:"file"`
+	Snapshot    string           `json:"experiment_snapshot"`
 	Experiments []jsonExperiment `json:"experiments"`
 }
 
-// WriteJSON writes the JSON report to path.
-func WriteJSON(path string, f *experiment.File, results []runner.RunResult) error {
-	rep := jsonReport{Version: 1, File: f.Path, Experiments: []jsonExperiment{}}
+// WriteJSON writes the JSON report to path. snapshot is the copy of the
+// experiment file the proxies loaded, or "".
+func WriteJSON(path string, f *experiment.File, snapshot string, results []runner.RunResult) error {
+	rep := jsonReport{Version: 1, File: f.Path, Snapshot: snapshot, Experiments: []jsonExperiment{}}
 	for _, g := range groups(f, results) {
 		je := jsonExperiment{Name: g.name, PassRate: g.rate(f), Runs: []jsonRun{}}
 		for _, r := range g.runs {

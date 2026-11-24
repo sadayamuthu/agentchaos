@@ -51,7 +51,15 @@ func runCmd(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		return 2
 	}
 
-	f, err := experiment.Load(positional[0])
+	// The bytes are read once: the runner grades from them and the proxies
+	// inject from a snapshot of them, so editing the file mid-run changes
+	// neither.
+	expData, err := os.ReadFile(positional[0])
+	if err != nil {
+		fmt.Fprintf(stderr, "agentchaos: %v\n", err)
+		return 2
+	}
+	f, err := experiment.Parse(positional[0], expData)
 	if err != nil {
 		fmt.Fprintf(stderr, "agentchaos: %v\n", err)
 		return 2
@@ -87,10 +95,18 @@ func runCmd(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		return 2
 	}
 
-	r := &runner.Runner{File: f, Self: self, WorkDir: dir}
+	// Raw bytes are enough: the proxies load the snapshot only to find the
+	// fault, and Load does not check that (relative) commands exist.
+	snapshot := filepath.Join(dir, "experiment.yaml")
+	if err := os.WriteFile(snapshot, expData, 0o644); err != nil {
+		fmt.Fprintf(stderr, "agentchaos: %v\n", err)
+		return 2
+	}
+
+	r := &runner.Runner{File: f, Self: self, WorkDir: dir, Snapshot: snapshot}
 	results := r.RunAll(ctx)
 
-	if err := report.WriteJSON(reportPath, f, results); err != nil {
+	if err := report.WriteJSON(reportPath, f, snapshot, results); err != nil {
 		fmt.Fprintf(stderr, "agentchaos: writing report: %v\n", err)
 		return 2
 	}
