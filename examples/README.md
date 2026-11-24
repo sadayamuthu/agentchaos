@@ -96,3 +96,10 @@ agent:
 Your agent must connect to the servers in that config and print its final
 answer to stdout, which `output_matches` and `output_not_matches` check. Use
 `agent.env` to set environment variables for it.
+
+A command path containing a `/`, such as `./my-agent`, resolves against the
+directory of the YAML file; a bare name is looked up on `PATH`. The agent
+runs with its own run directory, `<out>/<experiment>/<run>/`, as its working
+directory, for the preset and for a custom command alike. It never runs in the
+YAML file's directory, so it cannot read the suite or the servers' source and
+recover data a fault withheld.

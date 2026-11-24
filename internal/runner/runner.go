@@ -62,7 +62,8 @@ type Runner struct {
 	File *experiment.File
 	// Self is the path to the agentchaos binary, used as each server's proxy.
 	Self string
-	// WorkDir holds one directory per run: <exp-slug>/<index>/.
+	// WorkDir holds one directory per run: <exp-slug>/<index>/. The agent
+	// runs with its run directory as cwd.
 	WorkDir string
 }
 
@@ -174,7 +175,10 @@ func (r *Runner) run(ctx context.Context, exp experiment.Experiment, dir string,
 	defer stderrF.Close()
 
 	start := time.Now()
-	ar := runAgent(ctx, argv, filepath.Dir(r.File.Path), env, stdoutF, stderrF, r.File.RunTimeout)
+	// The agent runs in its run directory, not the experiment file's: there
+	// it could read the suite and the servers' source and recover the data a
+	// fault withheld. Relative commands were resolved by experiment.Load.
+	ar := runAgent(ctx, argv, dir, env, stdoutF, stderrF, r.File.RunTimeout)
 	res.Duration = time.Since(start)
 	res.ExitCode = ar.exitCode
 

@@ -239,19 +239,23 @@ experiments:
 	if err != nil {
 		t.Fatal(err)
 	}
-	rs := (&runner.Runner{File: f, Self: agentchaosBin, WorkDir: t.TempDir()}).RunAll(context.Background())
+	work := t.TempDir()
+	rs := (&runner.Runner{File: f, Self: agentchaosBin, WorkDir: work}).RunAll(context.Background())
 	if len(rs) != 2 {
 		t.Fatalf("%+v", rs)
 	}
 	var chains []string
-	for _, r := range rs {
+	for i, r := range rs {
 		lines := strings.Split(strings.TrimSpace(r.StdoutTail), "\n")
 		if len(lines) != 3 {
 			t.Fatalf("stdout %q", r.StdoutTail)
 		}
-		real, _ := filepath.EvalSymlinks(dir)
+		// The agent runs in its own run directory, never the experiment
+		// file's, where it could read the suite and the servers' source.
+		runDir := filepath.Join(work, "e", fmt.Sprint(i+1))
+		real, _ := filepath.EvalSymlinks(runDir)
 		if got, _ := filepath.EvalSymlinks(lines[0]); got != real {
-			t.Fatalf("cwd %q, want %q", lines[0], dir)
+			t.Fatalf("cwd %q, want the run dir %q", lines[0], runDir)
 		}
 		c := strings.TrimPrefix(lines[1], "chain=")
 		if len(c) != 16 {
