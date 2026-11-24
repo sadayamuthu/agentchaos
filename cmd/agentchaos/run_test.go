@@ -239,6 +239,31 @@ func TestRunInvalidFile(t *testing.T) {
 	}
 }
 
+func TestRunAgentNotFound(t *testing.T) {
+	dir := t.TempDir()
+	p := filepath.Join(dir, "exp.yaml")
+	body := fmt.Sprintf(`agent: {command: ["./does-not-exist", "{prompt}"]}
+servers:
+  crm: {command: [%q]}
+experiments:
+  - name: e
+    task: t
+    fault: {tool: crm.lookup, type: error, every_call: true}
+`, testserverBin)
+	if err := os.WriteFile(p, []byte(body), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	out := filepath.Join(dir, "out")
+	stdout, stderr, code := agentchaos(t, "run", p, "--out", out)
+	want := fmt.Sprintf("agentchaos: agent %q not found: ", filepath.Join(dir, "does-not-exist"))
+	if code != 2 || stdout != "" || !strings.HasPrefix(stderr, want) {
+		t.Fatalf("exit %d stdout %q stderr %q, want exit 2 and stderr starting %q", code, stdout, stderr, want)
+	}
+	if _, err := os.Stat(out); !os.IsNotExist(err) {
+		t.Fatalf("output dir created before the preflight: %v", err)
+	}
+}
+
 func TestRunUsage(t *testing.T) {
 	if _, _, code := agentchaos(t, "run"); code != 2 {
 		t.Fatalf("exit %d, want 2", code)

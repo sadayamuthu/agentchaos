@@ -183,6 +183,8 @@ func TestRunFaultNotTriggered(t *testing.T) {
 	}
 }
 
+// TestRunAgentMissing: agentchaos run preflights the agent and never gets
+// here, but a library caller of Runner still gets per-run agent errors.
 func TestRunAgentMissing(t *testing.T) {
 	rs := runFile(t, `["./does-not-exist"]`, "runs: 2\nrun_timeout: 30s", `  - name: first
     task: t

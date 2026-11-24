@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
 
@@ -63,6 +64,13 @@ func runCmd(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	if err != nil {
 		fmt.Fprintf(stderr, "agentchaos: %v\n", err)
 		return 2
+	}
+	// A missing agent would fail every run the same way; say so once.
+	if argv, _ := runner.BuildArgv(f.Agent, "", "", nil); len(argv) > 0 {
+		if _, err := exec.LookPath(argv[0]); err != nil {
+			fmt.Fprintf(stderr, "agentchaos: agent %q not found: %v\n", argv[0], err)
+			return 2
+		}
 	}
 	self, err := os.Executable()
 	if err == nil {
